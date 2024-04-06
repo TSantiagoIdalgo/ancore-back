@@ -6,7 +6,7 @@ import * as grpc from '@grpc/grpc-js';
 
 export default class CartCommandRepository {
   async addProduct (userId: string, productId: string): Promise<IUserCart> {
-    let cart = await UserCartSchema.findOne({ userId });
+    let cart = await UserCartSchema.findOne({ userId, isPaid: false });
     const product = await ProductSchema.findOne({ id: productId });
     if (!product) {
       throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
@@ -28,7 +28,7 @@ export default class CartCommandRepository {
   }
     
   async removeProduct (userId: string, productId: string): Promise<IUserCart> {
-    const cart = await UserCartSchema.findOne({ userId });
+    const cart = await UserCartSchema.findOne({ userId, isPaid: false });
     const product = await ProductSchema.findOne({ id: productId });
     
     if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
@@ -51,7 +51,7 @@ export default class CartCommandRepository {
   }
     
   async deleteProduct (userId: string, productId: string): Promise<IUserCart> {
-    const cart = await UserCartSchema.findOne({ userId });
+    const cart = await UserCartSchema.findOne({ userId, isPaid: false });
     const product = await ProductSchema.findOne({ id: productId });
     
     if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');

@@ -3,7 +3,7 @@ import server, { ServerHandlers } from './src/server';
 import sequelize from './src/database/sql/db';
 import mongodb from './src/database/nosql/db';
 import * as grpc from '@grpc/grpc-js';
-const PORT = process.env.PORT ?? 8082;
+const PORT = process.env.PORT ?? 8081;
 
 (async function main() {
   try {

@@ -8,4 +8,5 @@ export interface IUserCart{
     userId: string;
     total: number,
     products: IUserCartModel[];
+    isPaid: boolean;
   }

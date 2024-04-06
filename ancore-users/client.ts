@@ -2,6 +2,7 @@ import { ProtoGrpcType } from './proto/out/users';
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
+import { User__Output } from './proto/out/UserPackage/User';
 
 const PORT = process.env.PORT ?? 8082;
 const PROTO_PATH = './proto/users.proto';
@@ -22,13 +23,23 @@ client.waitForReady(deadLine, (err) => {
     return;
   }
 
-  onClientReady();
 });
 
-function onClientReady () {
-  client.getAllUsers({}, (err, res) => {
-    console.log(res, err);
-    return res;
-  }
-  );
+function getUserById (id: string) {
+  return new Promise<User__Output>((res, rej) => {
+    client.getUserById({ id }, (err, result) => {
+      if (err || !result) {
+        rej(err);
+        return;
+      }
+      res(result);
+    });
+  }); 
 }
+
+async function main () {
+  const user = await getUserById('');
+  return user;
+}
+
+main();
