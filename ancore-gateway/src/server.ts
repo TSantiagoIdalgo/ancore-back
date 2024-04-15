@@ -1,10 +1,13 @@
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { DocumentNode } from 'graphql';
+import { tokenVerify } from './helpers/token';
 import morgan from 'morgan';
 import fileUpload from 'express-fileupload';
 import express from 'express';
+
 import cors from 'cors';
+import productRouter from './route/productRoute';
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,13 +28,17 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
   server.use(express.urlencoded({ extended: true }));
 
   server.use('/graphql/upload',
-    fileUpload({ useTempFiles: false }),
-    cors());
-
+    fileUpload({ useTempFiles: true }),
+    cors(),
+    productRouter,
+  );
   server.use('/graphql', 
     cors(),
-    expressMiddleware(apolloServer,{
-      context: async ({ req }) => ({ token: req.headers.authorization })}));
+    expressMiddleware(apolloServer, {
+      context: async ({ res, req }) => {
+        const token = tokenVerify(req);
+        return { res, decodedToken: token };
+      }}));
   server.listen(PORT, () => console.log(`Server ready at http://localhost:${PORT}/graphql`));
 }
 

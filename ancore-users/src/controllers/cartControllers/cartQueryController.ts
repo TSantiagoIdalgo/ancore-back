@@ -25,27 +25,4 @@ export default class CartQueryController {
       else callback(new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'), {});
     }
   }
-
-
-  // Esta mal, creo
-  public async getTotalPriceOfCart (call: PT.UserProductsTotalPrice) {
-    try {
-      const { id } = call.request;
-      if (!id) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid argument');
-
-      const totalPrice = await this.cartQueryService.getTotalPrice(id);
-
-      if (!totalPrice) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
-
-      call.write({ totalPrice });
-      call.end(); 
-    } catch (error) {
-      if (error instanceof GRPCErrorHandler) call.on('error', (err: GRPCErrorHandler) => {
-        call.emit('error', err);
-      });
-      else call.on('error', () => {
-        call.emit('error', new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'));
-      });
-    }
-  }
 }

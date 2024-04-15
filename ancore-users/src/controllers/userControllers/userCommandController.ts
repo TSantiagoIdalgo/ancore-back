@@ -69,7 +69,6 @@ export default class UserCommandController {
       if (id === undefined || typeof id !== 'string') {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'userId is required');
       }
-      
       const user = await this.userCommandService.userVerify(id);
 
       res(null, user);

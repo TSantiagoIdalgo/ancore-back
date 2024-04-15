@@ -46,10 +46,10 @@ export default class UserCommandService {
     }
   }
 
-  public async userVerify (userId: string) {
+  public async userVerify (token: string) {
     try {
-      if (!userId) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Missing data');
-      return await this.userCommandRepository.verify(userId);
+      if (!token) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Missing data');
+      return await this.userCommandRepository.verify(token);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
       else throw new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error');

@@ -14,51 +14,57 @@ const product = new Schema<IProductModel>({
     type: String,
     required: true
   },
-  modelType: {
+  platform: {
     type: String,
     required: true
   },
-  family: {
+  developer: {
     type: String,
+    required: true
+  },
+  distributor: {
+    type: String,
+    required: true
+  },
+  genre: {
+    type: String,
+    required: true
+  },
+  score: {
+    type: Number,
+    required: true
+  },
+  disabled: {
+    type: Boolean,
     required: true
   },
   stock: {
     type: Number,
-    required: true,
-    default: 0
+    required: true
   },
-  disabled: {
-    type: Boolean,
-    required: true,
-    default: false
-  },
-  type: {
-    type: String,
+  price: {
+    type: Number,
     required: true
   },
   description: {
     type: String,
     required: true
   },
-  brand: {
-    type: String,
+  images: {
+    type: [String],
     required: true
-  },
-  price: {
-    type: Number,
-    required: true,
   },
   mainImage: {
     type: String,
     required: true
   },
-  images: {
-    type: [String],
+  trailer: {
+    type: String,
     required: false
   },
   amount: {
     type: Number,
-    default: 1
+    default: 0
   }
 });
 

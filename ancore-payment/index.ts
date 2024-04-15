@@ -7,7 +7,7 @@ const PORT = process.env.PORT ?? 8083;
 
 (async function main() {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log('Connection with database SQL has been established successfully');
     await mongodb();
     console.log('Connection with database NoSQL has been established successfully');

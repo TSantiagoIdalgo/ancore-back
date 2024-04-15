@@ -1,4 +1,4 @@
-import { ServerUnaryCall, sendUnaryData, ServerWritableStream } from '@grpc/grpc-js';
+import { ServerUnaryCall, sendUnaryData, ServerDuplexStream } from '@grpc/grpc-js';
 import { UserId__Output } from '../../proto/out/UserPackage/UserId';
 import { User } from '../../proto/out/UserPackage/User';
 import { Users } from '../../proto/out/UserPackage/Users';
@@ -9,8 +9,6 @@ import { update__Output } from '../../proto/out/UserPackage/update';
 import { UserId__Output } from '../../proto/out/UserPackage/UserId';
 import { LoginResponse } from '../../proto/out/UserPackage/LoginResponse';
 import { Products } from '../../proto/out/UserPackage/Products';
-import { TotalPrice } from '../../proto/out/UserPackage/TotalPrice';
-import { Product } from '../../proto/out/UserPackage/Product';
 import { UserProductRequest__Output } from '../../proto/out/UserPackage/UserProductRequest';
 import { UserFavorites__Output } from '../../proto/out/UserPackage/UserFavorites';
 
@@ -47,17 +45,7 @@ export type banResponse = sendUnaryData<User>
 export type UserProducts = ServerUnaryCall<UserId__Output, Products>
 export type UserProductsResponse = sendUnaryData<Products>
 
-export type UserProductsTotalPrice = ServerWritableStream<UserId__Output, TotalPrice>
-
-export type AddProduct = ServerUnaryCall<UserProductRequest__Output, Product>
-export type AddProductResponse = sendUnaryData<Product>
-
-export type RemoveProduct = ServerUnaryCall<UserProductRequest__Output, Product>
-export type RemoveProductResponse = sendUnaryData<Product>
-
-export type DeleteProduct = ServerUnaryCall<UserProductRequest__Output, Product>
-export type DeleteProductResponse = sendUnaryData<Product>
-
+export type UpdateCart = ServerDuplexStream<UserProductRequest__Output, UserProduct>
 
 // WhiteList proto types
 export type GetAllWhiteList = ServerUnaryCall<UserId__Output, Products>

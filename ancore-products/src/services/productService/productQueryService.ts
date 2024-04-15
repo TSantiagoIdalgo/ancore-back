@@ -9,10 +9,18 @@ export default class ProductQueryService {
     this.productQueryRepository = productQueryRepository;
   }
 
-  public async getProducts () {
+  public async getProducts (size?: number, page?: number) {
     try {
-      const products = await this.productQueryRepository.getAll();
+      if (size && page) {
+        const paginatedProducts = await this.productQueryRepository.getPaginate(size, page);
+        if (paginatedProducts.length === 0) {
+          throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Products not found');
+        }
 
+        return paginatedProducts;
+      }
+
+      const products = await this.productQueryRepository.getAll();
       if (products.length === 0) {
         throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Products not found');
       }
@@ -31,6 +39,17 @@ export default class ProductQueryService {
       if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
 
       return product;
+    } catch (error) {
+      if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
+      else throw new GRPCErrorHandler(500, 'Internal server error');
+    }
+  }
+
+  public async getTotalPages (size: number) {
+    try {
+      if (size < 1 || !size) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid size');
+
+      return await this.productQueryRepository.getPages(size);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
       else throw new GRPCErrorHandler(500, 'Internal server error');

@@ -34,17 +34,20 @@ message User {
 message Product {
     string id = 1;
     string name = 2;
-    string modelType = 3;
-    string family = 4;
-    string brand = 5;
-    int32 price = 6;
-    int32 stock = 7;
-    bool disabled = 8;
-    string type = 9;
-    string description = 10;
-    string mainImage = 11;
-    repeated string images = 12;
-    int32 amount = 13;
+    float price = 3;
+    int32 stock = 4;
+    bool disabled = 5;
+    string platform = 6;
+    float score = 7;
+    string distributor = 8;
+    string developer = 9;
+    string genre = 10;
+    string description = 11;
+    string trailer = 12;
+    string mainImage = 13;
+    repeated string images = 14;
+    int32 amount = 15;
+    float discount = 16;
 }
 
 message UserProduct {

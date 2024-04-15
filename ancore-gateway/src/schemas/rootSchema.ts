@@ -1,4 +1,6 @@
 import { gql } from 'graphql-tag';
+import userSchema from './user/userSchema';
+import productSchema from './product/productSchema';
 
 const rootSchema = gql`
     type Query {
@@ -9,4 +11,4 @@ const rootSchema = gql`
     }
 `;
 
-export const typeDefs = [rootSchema];
+export const typeDefs = [rootSchema, userSchema, productSchema];

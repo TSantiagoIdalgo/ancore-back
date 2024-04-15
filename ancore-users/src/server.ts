@@ -50,17 +50,8 @@ export function ServerHandlers () {
     getAllProducts: (call, callback) => { 
       handlers.cartQueryController.getUserCart(call, callback); 
     },
-    getTotalPrice: (call) => { 
-      handlers.cartQueryController.getTotalPriceOfCart(call); 
-    },
-    addProduct: (call, callback) => { 
-      handlers.cartCommandController.addProductToCart(call, callback); 
-    },
-    deleteAmount: (call, callback) => { 
-      handlers.cartCommandController.deleteProductFromCart(call, callback); 
-    },
-    removeProduct: (call, callback) => { 
-      handlers.cartCommandController.removeProductFromCart(call, callback); 
+    updateCart: (call) => {
+      handlers.cartCommandController.addProductToCart(call);
     }
   } as UserProductServiceHandlers);
 

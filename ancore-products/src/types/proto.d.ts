@@ -14,11 +14,18 @@ import { UserReviews } from '../../proto/out/ProductsPackage/UserReviews';
 import { ReviewId__Output } from '../../proto/out/ProductsPackage/ReviewId';
 import { UpdateReview__Output } from '../../proto/out/ProductsPackage/UpdateReview';
 import { UserId__Output } from '../../proto/out/ProductsPackage/UserId';
+import { Products } from '../../proto/out/ProductsPackage/Products';
+import { ProductPaginate__Output } from '../../proto/out/ProductsPackage/ProductPaginate';
+import { Size__Output } from '../../proto/out/ProductsPackage/Size';
+import { PagesResponse } from '../../proto/out/ProductsPackage/PagesResponse';
 
 
 // Product proto types
-export type TGetAllProducts = ServerUnaryCall<Empty__Output, Products>
+export type TGetAllProducts = ServerUnaryCall<ProductPaginate__Output, Products>
 export type TGetAllProductsResponse = sendUnaryData<Products>
+
+export type TGetAllPages = ServerUnaryCall<Size__Output, Products>
+export type TGetAllPagesResponse = sendUnaryData<PagesResponse>
 
 export type TGetProductById = ServerUnaryCall<ProductId__Output, Product>
 export type TGetProductByIdResponse = sendUnaryData<Product>

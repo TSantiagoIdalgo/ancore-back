@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package PaymentPackage;
+
+service PaymentService {
+    rpc createPayment(UserId) returns (PaymentURL) {}
+    rpc acceptPayment(CartParameters) returns (UserProduct) {}
+}
+
+message UserId {
+    string id = 1;
+}
+
+message CartParameters {
+    string userId = 1;
+    string cartId = 2;
+}
+
+message PaymentURL {
+    string paymentURL = 1;
+}
+
+message User {
+    string id = 1;
+    string userName = 2;
+    string email = 3;
+    string password = 4;
+    string role = 5;
+    string image = 6;
+    bool verify = 7;
+    bool ban = 8;
+}
+
+message Product {
+    string id = 1;
+    string name = 2;
+    string modelType = 3;
+    string family = 4;
+    string brand = 5;
+    int32 price = 6;
+    int32 stock = 7;
+    bool disabled = 8;
+    string type = 9;
+    string description = 10;
+    string mainImage = 11;
+    repeated string images = 12;
+    int32 amount = 13;
+}
+
+message UserProduct {
+    string id = 1;
+    string userId = 2;
+    int64 total = 3;
+    repeated Product products = 4;
+    bool isPaid = 5;
+}

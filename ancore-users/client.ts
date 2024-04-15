@@ -2,16 +2,15 @@ import { ProtoGrpcType } from './proto/out/users';
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { User__Output } from './proto/out/UserPackage/User';
+import { Users__Output } from './proto/out/UserPackage/Users';
 
-const PORT = process.env.PORT ?? 8082;
 const PROTO_PATH = './proto/users.proto';
 
 const packageDef = protoLoader.loadSync(path.resolve(__dirname, PROTO_PATH));
 const grpcObj = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType;
 
 const client = new grpcObj.UserPackage.UserService(
-  `0.0.0.0:${PORT}`, grpc.credentials.createInsecure()
+  '0.0.0.0:8081', grpc.credentials.createInsecure()
 );
 
 
@@ -22,24 +21,18 @@ client.waitForReady(deadLine, (err) => {
     console.log(err);
     return;
   }
-
+  getUserById();
 });
 
-function getUserById (id: string) {
-  return new Promise<User__Output>((res, rej) => {
-    client.getUserById({ id }, (err, result) => {
+function getUserById () {
+  return new Promise<Users__Output>((res, rej) => {
+    client.getAllUsers({ }, (err, result) => {
       if (err || !result) {
         rej(err);
         return;
       }
+      console.log(result);
       res(result);
     });
   }); 
 }
-
-async function main () {
-  const user = await getUserById('');
-  return user;
-}
-
-main();

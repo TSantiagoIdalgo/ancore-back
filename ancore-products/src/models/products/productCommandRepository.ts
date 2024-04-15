@@ -1,12 +1,16 @@
-import { IProducts, IProductModel } from '../../types/products';
+import { IProductModel } from '../../types/products';
 import ProductSchema from '../../database/nosql/schemas/productsSchema';
 
 export default class ProductCommandRepository {
-  public create (product: IProducts): Promise<IProductModel> {
-    return ProductSchema.create(product);
+  public create (product: IProductModel): Promise<IProductModel> {
+    return ProductSchema.create({
+      ...product,
+      price: Number(product.price),
+      discount: Number(product.discount)
+    });
   }
 
-  public update (id: string, data: IProducts): Promise<IProductModel | null> {
+  public update (id: string, data: IProductModel): Promise<IProductModel | null> {
     return ProductSchema.findByIdAndUpdate({ id }, data, { new: true });
   }
 

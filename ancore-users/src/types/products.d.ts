@@ -1,19 +1,21 @@
 import { Document } from 'mongoose';
 
 export interface IProductModel {
-  id: string;
+  id?: string;
   name: string;
-  modelType: string;
-  family: string;
-  brand: string;
   price: number;
   stock: number;
   disabled: boolean;
-  type: string;
+  platform: string;
+  score: number
+  distributor: string;
+  developer: string;
+  genre: string
   description: string;
+  trailer?: string;
   mainImage: string;
   images: string[];
-  amount: number;
+  amount?: number;
 }
 
 export interface IProducts extends Document<IProductModel>, IProductModel {}

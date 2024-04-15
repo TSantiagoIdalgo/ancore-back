@@ -15,7 +15,13 @@ const productPackage = grpcObj.ProductsPackage;
 
 export function ServerHandlers () {
   server.addService(productPackage.ProductsService.service, {
-
+    getAllProducts: (req, res) => { handlers.productQueryController.getAllProduct(req, res); },
+    getProductById: (req, res) => { handlers.productQueryController.getProductById(req, res); },
+    getTotalPages: (req, res) => { handlers.productQueryController.getTotalPages(req, res); },
+    
+    createProduct: (req, res) => { handlers.productCommandController.createProduct(req, res); },
+    updateProduct: (req, res) => { handlers.productCommandController.updateProduct(req, res); },
+    deleteProduct: (req, res) => { handlers.productCommandController.deleteProduct(req, res); },
   } as ProductsServiceHandlers);
 
   server.addService(productPackage.ReviewsService.service, {

@@ -1,4 +1,4 @@
-import { IProductModel } from './products';
+import { IProductModel } from '../products/products';
 
 export interface IReviewModel {
   id?: string;

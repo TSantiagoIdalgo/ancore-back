@@ -7,7 +7,18 @@ export default class ProductQueryRepository {
     return ProductSchema.find({ disabled: false }).lean().exec();
   }
 
+  getPaginate(size: number, page: number): Promise<IProductModel[]> {
+    const skipAmount = (page - 1) * size;
+    return ProductSchema.find().skip(skipAmount).limit(size).lean().exec();
+  }
+
+  async getPages(size: number): Promise<number> {
+    const total = await ProductSchema.countDocuments();
+    return Math.ceil(total / size);
+  }
+
   getById(id: string): Promise<IProductModel | null> {
-    return ProductSchema.findById(id);
+
+    return ProductSchema.findOne({ id });
   }
 }

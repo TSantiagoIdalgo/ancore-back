@@ -7,7 +7,10 @@
     "tsc": "tsc",
     "dev": "ts-node-dev index.ts",
     "client": "ts-node-dev client.ts",
-    "proto": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/out/ proto/gateway.proto"
+    "users": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/out/ proto/users.proto",
+    "products": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/out/ proto/products.proto",
+    "payment": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=proto/out/ proto/payment.proto",
+    "proto": "npm run users && npm run products && npm run payment"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +19,7 @@
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
     "@types/express-fileupload": "^1.5.0",
+    "@types/graphql-upload": "^16.0.7",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "20.11.5",
@@ -32,14 +36,19 @@
     "@apollo/server": "4.10.0",
     "@grpc/grpc-js": "^1.10.6",
     "@grpc/proto-loader": "^0.7.12",
+    "cloudinary": "^2.1.0",
     "cors": "2.8.5",
     "dotenv": "16.3.2",
     "express": "4.18.2",
     "express-fileupload": "^1.5.0",
     "graphql": "16.8.1",
     "graphql-tag": "2.12.6",
+    "graphql-upload": "^16.0.2",
+    "graphql-upload-ts": "^2.1.2",
     "grpc-tools": "^1.12.4",
     "jsonwebtoken": "^9.0.2",
-    "morgan": "1.10.0"
+    "morgan": "1.10.0",
+    "stream-to-buffer": "^0.1.0",
+    "zod": "^3.22.4"
   }
 }

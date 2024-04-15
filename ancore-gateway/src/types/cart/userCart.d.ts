@@ -1,4 +1,4 @@
-import { IProductModel } from './products';
+import { IProductModel } from '../products/products';
 
 interface IUserCartModel {
   productId: string;

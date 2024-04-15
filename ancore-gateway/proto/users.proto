@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package UserPackage;
+
+service UserService {
+    rpc getAllUsers(Empty) returns (Users) {}
+    rpc getUserById(UserId) returns (User) {}
+    rpc getUserLogin(UserLogin) returns (LoginResponse) {}
+    rpc GetUserNetworkLogin(UserNetworkLogin) returns (LoginResponse) {}
+    
+    rpc createUser(User) returns (User) {}
+    rpc updateUser (update) returns (User) {}
+    rpc deleteUser (UserId) returns (User) {}
+    rpc verifyUser (UserId) returns (User) {}
+    rpc userBan (UserId) returns (User) {}
+}
+
+service UserProductService {
+    rpc getAllProducts (UserId) returns (Products) {}
+    rpc updateCart (stream UserProductRequest) returns (stream UserProduct) {}
+}
+
+service UserFavsService {
+    rpc getAllUserFavs (UserId) returns (Products) {}
+
+    rpc addToFavs (UserFavorites) returns (Favorite) {}
+    rpc deleteFav (UserFavorites) returns (Favorite) {}
+}
+
+message Empty {}
+
+message User {
+    string id = 1;
+    string userName = 2;
+    string email = 3;
+    string password = 4;
+    string role = 5;
+    string image = 6;
+    bool verify = 7;
+    bool ban = 8;
+}
+
+message Product {
+    string id = 1;
+    string name = 2;
+    float price = 3;
+    int32 stock = 4;
+    bool disabled = 5;
+    string platform = 6;
+    float score = 7;
+    string distributor = 8;
+    string developer = 9;
+    string genre = 10;
+    string description = 11;
+    string trailer = 12;
+    string mainImage = 13;
+    repeated string images = 14;
+    int32 amount = 15;
+    int32 discount = 16;
+}
+message Favorite {
+    string id = 1;
+    string userId = 2;
+    string productId = 3;
+}
+
+message UserFavorites {
+    string userId = 1;
+    string productId = 2;
+}
+
+message Products {
+    repeated Product products = 1;
+}
+
+message UserProductRequest {
+    string userId = 1;
+    string productId = 2;
+    string action = 3;
+}
+
+message UserProduct {
+    string id = 1;
+    string userId = 2;
+    int64 total = 3;
+    repeated Product products = 4;
+    bool isPaid = 5;
+}
+
+message Users {
+    repeated User users = 1;
+}
+
+message UserId {
+    string id = 1;
+}
+
+message UserLogin {
+    string email = 1;
+    string password = 2;
+}
+
+message UserNetworkLogin {
+    string userName = 1;
+    string email = 2;
+    string password = 3;
+    string image = 4;
+}
+
+message LoginResponse {
+    string token = 1;
+}
+
+message update {
+    string userId = 1;
+    User user = 2;
+}
