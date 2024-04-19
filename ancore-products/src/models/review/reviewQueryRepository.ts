@@ -32,7 +32,8 @@ export default class ReviewQueryRepository {
     const products: ReviewsProduct[] = [];
 
     for (const review of reviews) {
-      const product = await ProductSchema.findById(review.productId).lean().exec() as IProducts | null;
+      const product = await ProductSchema.findOne({ id: review.productId })
+        .lean().exec() as IProducts | null;
       if (product) products.push({ userReviews: review, userProduct: product });
     }
     

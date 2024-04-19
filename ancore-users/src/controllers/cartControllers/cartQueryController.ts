@@ -18,7 +18,6 @@ export default class CartQueryController {
       const cart = await this.cartQueryService.getCart(id);
 
       if (!cart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
-
       callback(null, cart);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) callback(error);

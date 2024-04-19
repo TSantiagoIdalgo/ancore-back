@@ -3,3 +3,8 @@ export interface IWhiteList {
   userId: string;
   productId: string;
 }
+
+export enum WhitelistAction {
+  add = 'add',
+  remove = 'remove',
+}

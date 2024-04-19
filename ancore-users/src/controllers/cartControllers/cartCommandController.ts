@@ -14,7 +14,6 @@ export default class CartCommandController {
 
   public async addProductToCart(call: UpdateCart) {
     try {
-      
       call.on('data', async (request: UserProductRequest) => {
         const { action, productId, userId } = request;
         if (!productId) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid product id');
@@ -22,26 +21,48 @@ export default class CartCommandController {
 
         switch (action) {
         case 'add': {
-          const newProduct = await this.cartCommandService.addProduct(userId, productId);
-          call.write(newProduct);
-          break;
+          try {
+            const newProduct = await this.cartCommandService.addProduct(userId, productId);
+            call.write(newProduct);
+            call.end();
+            break;
+          } catch (error) {
+            call.emit('error', error);
+            break;
+          }
         }
         case 'remove': {
-          const newProduct = await this.cartCommandService.removeProduct(userId, productId);
-          call.write(newProduct);
-          break;
+          try {
+            const newProduct = await this.cartCommandService.removeProduct(userId, productId);
+            call.write(newProduct);
+            call.end();
+            break;
+          } catch (error) {
+            call.emit('error', error);
+            break;
+          }
         }
         case 'clear': {
-          const newProduct = await this.cartCommandService.deleteProduct(userId, productId);
-          call.write(newProduct);
-          break;
+          try {
+            const newProduct = await this.cartCommandService.deleteProduct(userId, productId);
+            call.write(newProduct);
+            call.end();
+            break;
+          } catch (error) {
+            call.emit('error', error);
+            break;
+          }
         }
         default:
           throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid action');
         }
       });
-      call.on('end', () => call.end());
+
+      call.on('end', () => {
+        call.end();
+      });
     } catch (error) {
+      console.log(error);
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
       else throw new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error');
     }

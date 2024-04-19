@@ -1,4 +1,10 @@
-import { IUserCart } from '../../types/userCart';
+import { IProductModel } from '../../types/products';
+
+interface IUserCart {
+  products: IProductModel[];
+  total: number;
+}
+
 
 export function declinedEmail (name: string, cart: IUserCart) {
   let content = `

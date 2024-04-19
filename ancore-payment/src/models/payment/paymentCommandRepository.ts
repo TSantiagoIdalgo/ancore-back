@@ -2,7 +2,8 @@ import Stripe from 'stripe';
 import UserCartSchema from '../../database/nosql/schemas/cartSchema';
 import GRPCErrorHandler from '../../helpers/error';
 import * as grpc from '@grpc/grpc-js';
-import { IUserCart } from '../../types/userCart';
+import { IProductModel } from '../../types/products';
+import ProductSchema from '../../database/nosql/schemas/productSchema';
 
 export default class PaymentCommandRepository {
   private readonly stripe: Stripe;
@@ -12,8 +13,7 @@ export default class PaymentCommandRepository {
   }
 
   async createPaymentIntent(userId: string): Promise<string> {
-    const userCart = await UserCartSchema.findOne({ userId }).populate('products') as IUserCart|null;
-    if (!userCart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+    const userCart = await this.getCart(userId);
 
     const products = userCart.products.map(product => {
       return {
@@ -40,18 +40,31 @@ export default class PaymentCommandRepository {
     if (!payment.url) {
       throw new GRPCErrorHandler(grpc.status.INTERNAL, 'Payment intent creation failed');
     }
-    
+
     return payment.url;
   }
   
-  async paymentAccepted (userId: string, cartId: string): Promise<IUserCart> {
-    const userCart = await UserCartSchema.findOneAndUpdate(
-      { userId, id: cartId },
+  async paymentAccepted (userId: string) {
+    const cart = await this.getCart(userId);
+    const acceptCart = await UserCartSchema.findOneAndUpdate(
+      { userId, id: cart.id },
       { isPaid: true }, 
       { new: true }
     );
-    if (!userCart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+    if (!acceptCart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+    return { total: acceptCart.total, products: cart.products, isPaid: acceptCart.isPaid };
+  }
 
-    return userCart;
+  private async getCart (userId: string)  {
+    const cart = await UserCartSchema.findOne({ userId, isPaid: false }).lean().exec();
+    if (!cart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+
+    const products: IProductModel[] = [];
+    await Promise.all(cart.products.map(async (product) => {
+      const productFind = await ProductSchema.findOne({ id: product.productId }).lean().exec();
+      if (productFind !== null) products.push({ ...productFind, amount: product.amount });
+    }));
+
+    return { ...cart, products };
   }
 }

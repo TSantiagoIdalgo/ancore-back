@@ -1,45 +1,64 @@
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
 import { DocumentNode } from 'graphql';
+import { expressMiddleware } from '@apollo/server/express4';
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
+import { useServer } from 'graphql-ws/lib/use/ws';
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { createServer } from 'http';
+import { WebSocketServer } from 'ws';
 import { tokenVerify } from './helpers/token';
 import morgan from 'morgan';
 import fileUpload from 'express-fileupload';
 import express from 'express';
-
 import cors from 'cors';
-import productRouter from './route/productRoute';
+import productRouter from './route/product/productRoute';
+import paymentRouter from './route/payment/paymentRoute';
 
 const PORT = process.env.PORT || 8080;
 
 async function Server (typeDefs: DocumentNode[], resolvers: any) {
-  const server = express();
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
 
+  const app = express();
+  const httpServer = createServer(app);
   const apolloServer = new ApolloServer({
-    typeDefs: typeDefs,
-    resolvers: resolvers,
+    schema,
     csrfPrevention: true,
     cache: 'bounded',
+    plugins: [
+      ApolloServerPluginDrainHttpServer({ httpServer }),
+      { async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+      },
+    ]
   });
 
+  const wsServer = new WebSocketServer({ server: httpServer, path: '/graphql' });
+  const serverCleanup = useServer({ schema }, wsServer);
   await apolloServer.start();
 
-  server.use(morgan('dev'));
-  server.use(express.json());
-  server.use(express.urlencoded({ extended: true }));
-
-  server.use('/graphql/upload',
-    fileUpload({ useTempFiles: true }),
-    cors(),
-    productRouter,
-  );
-  server.use('/graphql', 
-    cors(),
+  app.use(cors());
+  app.use(morgan('dev'));
+  app.use(fileUpload({ useTempFiles: true }));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+  app.use('/graphql/upload', productRouter);
+  app.use('/graphql/payment', paymentRouter);
+  app.use('/graphql', 
     expressMiddleware(apolloServer, {
-      context: async ({ res, req }) => {
-        const token = tokenVerify(req);
-        return { res, decodedToken: token };
-      }}));
-  server.listen(PORT, () => console.log(`Server ready at http://localhost:${PORT}/graphql`));
+      context: async ({ req, res }) => {
+        const decodedToken = tokenVerify(req);
+
+        return { res, decodedToken };
+      }
+    }));
+
+  httpServer.listen(PORT, () => console.log(`Server ready at http://localhost:${PORT}/graphql`));
 }
 
 export default Server;

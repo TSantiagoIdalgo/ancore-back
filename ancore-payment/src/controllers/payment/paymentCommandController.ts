@@ -27,13 +27,11 @@ export default class PaymentCommandController {
 
   public async acceptPayment (call: PT.AcceptPayment, callback: PT.AcceptPaymentResponse) {
     try {
-      const { cartId, userId } = call.request;
-      if (!cartId || !userId) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Missing data');
+      const { id } = call.request;
 
-      const payment = await this.paymentCommandService.acceptPayment(userId, cartId);
-      if (!payment.isPaid || payment.products === null) {
-        throw new GRPCErrorHandler(grpc.status.INTERNAL, 'INTERNAL_SERVER_ERROR');
-      }
+      if (!id) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Missing data');
+
+      const payment = await this.paymentCommandService.acceptPayment(id);
 
       callback(null, payment);
     } catch (error) {

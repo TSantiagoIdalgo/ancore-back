@@ -16,7 +16,7 @@ service UserService {
 }
 
 service UserProductService {
-    rpc getAllProducts (UserId) returns (Products) {}
+    rpc getAllProducts (UserId) returns (UserProduct) {}
     rpc updateCart (stream UserProductRequest) returns (stream UserProduct) {}
 }
 
@@ -83,7 +83,7 @@ message UserProductRequest {
 message UserProduct {
     string id = 1;
     string userId = 2;
-    int64 total = 3;
+    int32 total = 3;
     repeated Product products = 4;
     bool isPaid = 5;
 }

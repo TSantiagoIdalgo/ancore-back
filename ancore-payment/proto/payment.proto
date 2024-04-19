@@ -4,16 +4,11 @@ package PaymentPackage;
 
 service PaymentService {
     rpc createPayment(UserId) returns (PaymentURL) {}
-    rpc acceptPayment(CartParameters) returns (UserProduct) {}
+    rpc acceptPayment(UserId) returns (UserProduct) {}
 }
 
 message UserId {
     string id = 1;
-}
-
-message CartParameters {
-    string userId = 1;
-    string cartId = 2;
 }
 
 message PaymentURL {
@@ -53,7 +48,7 @@ message Product {
 message UserProduct {
     string id = 1;
     string userId = 2;
-    int64 total = 3;
+    int32 total = 3;
     repeated Product products = 4;
     bool isPaid = 5;
 }

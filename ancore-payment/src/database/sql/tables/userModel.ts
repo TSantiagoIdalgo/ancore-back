@@ -17,7 +17,7 @@ const UserModel = sequelize.define<IUser>('users', {
     primaryKey: true,
     unique: true
   },
-  passwordHash: {
+  password: {
     type: DataTypes.STRING(128),
     allowNull: false
   },

@@ -1,7 +1,7 @@
-import { IUserCart } from '../../types/userCart';
+import { CartForEmails } from '../../types/userCart';
 
-export function purchaseEmail (name: string, cart: IUserCart) {
-  let content = `
+export function purchaseEmail (name: string, cart: CartForEmails) {
+  let content =  `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -9,27 +9,61 @@ export function purchaseEmail (name: string, cart: IUserCart) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Verify your email</title>
   </head>
-  <body>
-      <div style="background-color: #111; width: 100%; height: 300px; font-family: sans-serif; padding: 10px; text-align: center;">
-        <h1 style="color: #fff;">Hi 👋 <span style="color: #7648ffc7;">${name}</span></h1>
-        <p>Your purchase of: ${cart.total} has been made successfully, enjoy it!</p>
-        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 10px; width: 100%; height: 100%;">
-    `;
-  
+  <body style="margin: 0; padding: 0; box-sizing: border-box;">
+    <div style="
+    background-image: url('https://gaming-cdn.com/img/products/7911/pcover/1400x500/7911.jpg?v=1711626178'); 
+    height: 200px; 
+    width: 100%; 
+    background-size: cover;
+    text-align: center;
+    position: relative;">
+      <div style="
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        background-color: rgba(0, 0, 0, 0.8);">
+      </div>
+    </div>
+    <div style="
+      background-color: #111; 
+      width: 100%; 
+      height: 800px; 
+      font-family: sans-serif; 
+      text-align: center;
+      position: relative;">
+      <div style="
+        position: absolute;
+        height: 100%;
+        width: 80%;
+        background-color: #272727;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 14px;">
+          <h1 style="color: #fff; font-size: 2.5rem; ">Hi 👋 <span style="color: #ff5400;">${name}</span></h1>
+
+          <p style="color: #fff;font-size: 1.5rem;">Your purchase of: $${cart.total} has been made successfully, enjoy it!</p>
+
+        <div style="width: 100%; height: 100%;">`;
+
   cart.products.forEach(product => {
-    content += `
-      <p style="font-size: 16px; color: #fff;">${product.name} - ${product.price}</p>
-      <img style="width: 200px; height: 200px;" src=${product.mainImage}" alt="${product.name}" />
-    `;
+    content += `<img style="display: inline-block; width: 125px; height: 125px; border-radius: 50%;" src="${product.mainImage}" alt="${product.name}" />`;
   });
 
-  content += `
+  content += `<div style="display: block;">
+            <span style="font-size: 16px; color: #fff; font-size: 1.4rem;">
+              You buyed ${cart.products[0].name} ${cart.products.length > 1 ? `and antoher ${cart.products.length - 1} products` : ''}
+            </span>
+          </div>
         </div>
-        <p>Thanks for your purchase!</p>
-        <p>Ancore Gaming</p>
       </div>
+    </div>
   </body>
   </html>
+
+
   `;
 
   return content;

@@ -1,15 +1,15 @@
-import ProductSetters from '../services/products/productSetters';
-import UserGetters from '../services/users/userGetters';
-import productValidate from '../helpers/validates/productValidate';
+import ProductSetters from '../../services/products/productSetters';
+import UserGetters from '../../services/users/userGetters';
+import productValidate from '../../helpers/validates/productValidate';
 import { Request, Response } from 'express';
-import { ErrorDefs } from '../types/error';
+import { ErrorDefs } from '../../types/error';
 import { unlinkSync } from 'fs';
-import { tokenVerify } from '../helpers/token';
-import { IProductModel } from '../types/products/products';
+import { tokenVerify } from '../../helpers/token';
+import { IProductModel } from '../../types/products/products';
 import { v2 as cloudinary } from 'cloudinary';
-import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET_KEY } from '../config/api';
+import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET_KEY } from '../../config/api';
 import { UploadedFile } from 'express-fileupload';
-import { userClient } from '../config/clients';
+import { userClient } from '../../config/clients';
 
 
 export default class CreateProduct {

@@ -1,7 +1,7 @@
 import { purchaseEmail } from './purchaseTemplate';
 import { declinedEmail } from './declinedTemplate';
 import { EMAIL_HOST, EMAIL_PASSWORD, EMAIL_USER } from '../../config/api';
-import { IUserCart } from '../../types/userCart';
+import { CartForEmails } from '../../types/userCart';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-export async function sendPurchaseEmail(adress: string, name: string, cart: IUserCart) {
+export async function sendPurchaseEmail(adress: string, name: string, cart: CartForEmails) {
   transporter.sendMail({
     from: 'AncoreGaming',
     to: adress,
@@ -26,7 +26,7 @@ export async function sendPurchaseEmail(adress: string, name: string, cart: IUse
   });
 }
 
-export async function  sendRejectedEmail(adress: string, name: string, cart: IUserCart) {
+export async function  sendRejectedEmail(adress: string, name: string, cart: CartForEmails) {
   transporter.sendMail({
     from: 'AncoreGaming',
     to: adress,

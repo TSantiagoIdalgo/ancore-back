@@ -1,10 +1,5 @@
 import { IProductModel } from '../products/products';
 
-interface IUserCartModel {
-  productId: string;
-  amount: number
-}
-
 export interface IUserCart{
     id: string;
     userId: string;
@@ -12,3 +7,9 @@ export interface IUserCart{
     products: IProductModel[];
     isPaid: boolean;
   }
+
+export type ActionCart = 'add' | 'remove' | 'clear'
+
+export enum CartEvents {
+  CART_UPDATED = 'CART_UPDATED'
+}

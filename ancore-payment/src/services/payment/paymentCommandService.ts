@@ -23,17 +23,17 @@ export default class PaymentCommandService {
     }
   }  
 
-  public async acceptPayment (userId: string, cartId: string) {
+  public async acceptPayment (userId: string) {
     try {
-      if (!userId || !cartId) {
+      if (!userId) {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid argument');
       }
 
-      const userCart = await this.paymentCommandRepository.paymentAccepted(userId, cartId);
+      const userCart = await this.paymentCommandRepository.paymentAccepted(userId);
 
       if (!userCart.isPaid) {
         await this.paymentQueryRepository.sendRejectedEmail(userId, userCart);
-        throw new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error');
+        throw new GRPCErrorHandler(grpc.status.INTERNAL, 'The email was rejected');
       }
 
       await this.paymentQueryRepository.sendPurchaseEmail(userId, userCart);
