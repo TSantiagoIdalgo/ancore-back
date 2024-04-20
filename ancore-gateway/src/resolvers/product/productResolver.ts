@@ -15,11 +15,11 @@ const productProxy = new ProductProxy(productService);
 const productResolver = {
   Query: {
     getAllProducts: async (_root: Paginated, args: Paginated) => 
-      productProxy.getAllProducts(args.page, args.size),
+      productProxy.getAllProducts(args.page, args.size, args.filter),
     getProductById: async (_root: ProductId, args: ProductId) =>
       productProxy.getProductById(args.productId),
     getTotalPages: async (_root: Paginated, args: Paginated) =>
-      productProxy.getTotalPages(args.size)
+      productProxy.getTotalPages(args.size, args.filter)
   },
   Mutation: {
     updateProduct: async (_root: ProductInput, args: ProductInput, context: ServerContext) =>

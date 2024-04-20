@@ -42,6 +42,14 @@ export const reviewClient = new productObj.ProductsPackage.ReviewsService(
   `0.0.0.0:${PRODUCTS_PORT}`, grpc.credentials.createInsecure()
 );
 
+export const genreClient = new productObj.ProductsPackage.GenreService(
+  `0.0.0.0:${PRODUCTS_PORT}`, grpc.credentials.createInsecure()
+);
+
+export const bannerClient = new productObj.ProductsPackage.BannerService(
+  `0.0.0.0:${PRODUCTS_PORT}`, grpc.credentials.createInsecure()
+);
+
 
 // Payment microservice, on port 8083
 

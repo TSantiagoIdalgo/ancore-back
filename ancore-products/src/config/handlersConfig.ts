@@ -10,6 +10,8 @@ import ReviewCommandController from '../controllers/reviewController/reviewComma
 import ProductCommandRepository from '../models/products/productCommandRepository';
 import ProductCommandService from '../services/productService/productCommandService';
 import ProductCommandController from '../controllers/productController/productCommandController';
+import GenreController from '../controllers/genreController/genreController';
+import BannerController from '../controllers/bannerController/bannerController';
 
 const productQueryRepository = new ProductQueryRepository();
 const productCommandRepository = new ProductCommandRepository();
@@ -27,3 +29,5 @@ export const productQueryController = new ProductQueryController(productQuerySer
 export const productCommandController = new ProductCommandController(productCommandService);
 export const reviewQueryController = new ReviewQueryController(reviewQueryService);
 export const reviewCommandController = new ReviewCommandController(reviewCommandService);
+export const genreController = new GenreController();
+export const bannerController = new BannerController();

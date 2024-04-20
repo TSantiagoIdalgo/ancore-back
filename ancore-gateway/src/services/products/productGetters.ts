@@ -1,7 +1,8 @@
 import { PagesResponse__Output } from '../../../proto/out/ProductsPackage/PagesResponse';
 import { ProductsServiceClient } from '../../../proto/out/ProductsPackage/ProductsService';
 import { Product__Output } from '../../../proto/out/UserPackage/Product';
-import { Products__Output } from '../../../proto/out/UserPackage/Products';
+import { Products__Output } from '../../../proto/out/ProductsPackage/Products';
+import { IProductFilter } from '../../types/products/products';
 import GRPCErrorHandler from '../../helpers/error';
 
 export default class ProductGetters {
@@ -11,9 +12,9 @@ export default class ProductGetters {
     this.client = client;
   }
 
-  public getProducts(page?: number, size?: number): Promise<Products__Output> {
+  public getProducts(page?: number, size?: number, filter?: IProductFilter): Promise<Products__Output> {
     return new Promise<Products__Output>((res, rej) => {
-      this.client.getAllProducts({ page, size }, (err, result) => {
+      this.client.getAllProducts({ page, size, filter }, (err, result) => {
         if (err || !result) {
           if (!err?.code) {
             rej(err);
@@ -43,9 +44,9 @@ export default class ProductGetters {
     });
   }
 
-  public getPages (size: number): Promise<PagesResponse__Output> {
+  public getPages (size: number, filter?: IProductFilter): Promise<PagesResponse__Output> {
     return new Promise<PagesResponse__Output>((res, rej) => {
-      this.client.getTotalPages({ size }, (err, result) => {
+      this.client.getTotalPages({ size, filter }, (err, result) => {
         if (err || !result) {
           if (!err?.code) {
             rej(err);

@@ -2,6 +2,7 @@ import ReviewCommandService from '../../services/reviewService/reviewCommandServ
 import GRPCErrorHandler from '../../helpers/error';
 import * as PT from '../../types/proto';
 import * as grpc from '@grpc/grpc-js';
+import { IReviewModel } from '../../types/reviews';
 
 
 export default class ReviewCommandController {
@@ -18,7 +19,7 @@ export default class ReviewCommandController {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Id and UserId are required');
       }
 
-      const newReview = await this.reviewCommandService.createReview(review);
+      const newReview = await this.reviewCommandService.createReview(review as IReviewModel);
       callback(null, newReview);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
@@ -37,7 +38,7 @@ export default class ReviewCommandController {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Id is required');
       }
 
-      const reviewUpdate = await this.reviewCommandService.updateReview(updateReview, userId);
+      const reviewUpdate = await this.reviewCommandService.updateReview(updateReview as IReviewModel, userId);
       callback(null, reviewUpdate);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);

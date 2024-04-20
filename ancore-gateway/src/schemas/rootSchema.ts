@@ -4,6 +4,7 @@ import productSchema from './product/productSchema';
 import reviewSchema from './review/reviewSchema';
 import cartSchema from './cart/cartSchema';
 import whitelistSchema from './whitelist/whitelistSchema';
+import generalDataSchema from './generalData/generalDataSchema';
 
 const rootSchema = gql`
     type Query {
@@ -19,5 +20,6 @@ const rootSchema = gql`
 
 export const typeDefs = [
   rootSchema, userSchema, productSchema, 
-  reviewSchema, cartSchema, whitelistSchema
+  reviewSchema, cartSchema, whitelistSchema,
+  generalDataSchema
 ];

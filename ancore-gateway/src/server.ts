@@ -13,6 +13,7 @@ import express from 'express';
 import cors from 'cors';
 import productRouter from './route/product/productRoute';
 import paymentRouter from './route/payment/paymentRoute';
+import bannerRoute from './route/banner/bannerRoute';
 
 const PORT = process.env.PORT || 8080;
 
@@ -25,17 +26,9 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
     schema,
     csrfPrevention: true,
     cache: 'bounded',
-    plugins: [
-      ApolloServerPluginDrainHttpServer({ httpServer }),
-      { async serverWillStart() {
-        return {
-          async drainServer() {
-            await serverCleanup.dispose();
-          },
-        };
-      },
-      },
-    ]
+    plugins: [ ApolloServerPluginDrainHttpServer({ httpServer }), { 
+      async serverWillStart() { return { async drainServer() { await serverCleanup.dispose(); } }; },
+    }]
   });
 
   const wsServer = new WebSocketServer({ server: httpServer, path: '/graphql' });
@@ -49,11 +42,11 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
   app.use(express.urlencoded({ extended: true }));
   app.use('/graphql/upload', productRouter);
   app.use('/graphql/payment', paymentRouter);
+  app.use('/graphql/banner', bannerRoute);
   app.use('/graphql', 
     expressMiddleware(apolloServer, {
       context: async ({ req, res }) => {
         const decodedToken = tokenVerify(req);
-
         return { res, decodedToken };
       }
     }));

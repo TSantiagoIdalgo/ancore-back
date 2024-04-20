@@ -1,6 +1,8 @@
 import { ProtoGrpcType } from '../proto/out/products';
 import { ProductsServiceHandlers } from '../proto/out/ProductsPackage/ProductsService';
 import { ReviewsServiceHandlers } from '../proto/out/ProductsPackage/ReviewsService';
+import { GenreServiceHandlers } from '../proto/out/ProductsPackage/GenreService';
+import { BannerServiceHandlers } from '../proto/out/ProductsPackage/BannerService';
 import path from 'path';
 import * as handlers from './config/handlersConfig';
 import * as grpc from '@grpc/grpc-js';
@@ -34,6 +36,23 @@ export function ServerHandlers () {
     updateReview: (req, res) => { handlers.reviewCommandController.updateReview(req, res); },
     deleteReview: (req, res) => { handlers.reviewCommandController.deleteReview(req, res); },
   } as ReviewsServiceHandlers);
+
+
+  server.addService(productPackage.GenreService.service, {
+    getAllGenres: (req, res) => { handlers.genreController.getAllGenres(req, res); },
+    getGenreById: (req, res) => { handlers.genreController.getGenreById(req, res); },
+    createGenre: (req, res) => { handlers.genreController.createGenre(req, res); },
+    deleteGenre: (req, res) => { handlers.genreController.deleteGenre(req, res); },
+  } as GenreServiceHandlers);
+
+  server.addService(productPackage.BannerService.service, {
+    getAllBanners: (req, res) => { handlers.bannerController.getAllBanner(req, res); },
+    getBannerById: (req, res) => { handlers.bannerController.getBannerById(req, res); },
+
+    createBanner: (req, res) => { handlers.bannerController.createBanner(req, res); },
+    deleteBanner: (req, res) => { handlers.bannerController.deleteBanner(req, res); },
+    updateBanner: (req, res) => { handlers.bannerController.updateBanner(req, res); },
+  } as BannerServiceHandlers);
 }
 
 export default server;

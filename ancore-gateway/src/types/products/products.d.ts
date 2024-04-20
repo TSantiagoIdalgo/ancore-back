@@ -9,7 +9,7 @@ export interface IProductModel {
   score: number
   distributor: string;
   developer: string;
-  genre: string
+  genre: string[];
   description: string;
   trailer?: string;
   mainImage: string;
@@ -21,4 +21,14 @@ export interface IProductContent {
   trailer: File;
   mainImage: File;
   images: File[]; 
+}
+
+export interface IProductFilter {
+  name?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  platform?: string;
+  score?: number;
+  genre?: string[];
+  discount?: number;
 }

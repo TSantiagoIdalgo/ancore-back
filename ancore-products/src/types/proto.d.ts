@@ -19,6 +19,14 @@ import { ProductPaginate__Output } from '../../proto/out/ProductsPackage/Product
 import { Size__Output } from '../../proto/out/ProductsPackage/Size';
 import { PagesResponse } from '../../proto/out/ProductsPackage/PagesResponse';
 
+import { Genres } from '../../proto/out/ProductsPackage/Genres';
+import { Genre } from '../../proto/out/ProductsPackage/Genre';
+import { GenreId__Output } from '../../proto/out/ProductsPackage/GenreId';
+import { Genre__Output } from '../../proto/out/ProductsPackage/Genre';
+import { Banners } from '../../proto/out/ProductsPackage/Banners';
+import { BannerId__Output } from '../../proto/out/ProductsPackage/BannerId';
+import { BannerData } from './banner';
+import { UpdateBanner__Output } from '../../proto/out/ProductsPackage/UpdateBanner';
 
 // Product proto types
 export type TGetAllProducts = ServerUnaryCall<ProductPaginate__Output, Products>
@@ -61,3 +69,33 @@ export type TDeleteReviewResponse = sendUnaryData<Review>
 export type TUpdateReview = ServerUnaryCall<UpdateReview__Output, Review>
 export type TUpdateReviewResponse = sendUnaryData<Review>
  
+// Genre proto types 
+
+export type TGetGenres = ServerUnaryCall<Empty__Output, Genres>
+export type TGetGenresResponse = sendUnaryData<Genres>
+
+export type TGetGenre = ServerUnaryCall<GenreId__Output, Genre>
+export type TGetGenreResponse = sendUnaryData<Genre>
+
+export type TCreateGenre = ServerUnaryCall<Genre__Output, Genre>
+export type TCreateGenreResponse = sendUnaryData<Genre>
+
+export type TDeleteGenre = ServerUnaryCall<GenreId__Output, Genre>
+export type TDeleteGenreResponse = sendUnaryData<Genre>
+
+// Banner proto types 
+
+export type TGetBanners = ServerUnaryCall<Empty__Output, Banners>
+export type TGetBannersResponse = sendUnaryData<Banners>
+
+export type TGetBanner = ServerUnaryCall<BannerId__Output, BannerData>
+export type TGetBannerResponse = sendUnaryData<BannerData>
+
+export type TCreateBanner = ServerUnaryCall<Banner__Output, BannerData>
+export type TCreateBannerResponse = sendUnaryData<BannerData>
+
+export type TDeleteBanner = ServerUnaryCall<BannerId__Output, BannerData>
+export type TDeleteBannerResponse = sendUnaryData<BannerData>
+
+export type TUpdateBanner = ServerUnaryCall<UpdateBanner__Output, BannerData>
+export type TUpdateBannerResponse = sendUnaryData<BannerData>

@@ -1,4 +1,4 @@
-import { Products__Output } from '../../../proto/out/UserPackage/Products';
+import { Products__Output } from '../../../proto/out/ProductsPackage/Products';
 import { UserFavsServiceClient } from '../../../proto/out/UserPackage/UserFavsService';
 import GRPCErrorHandler from '../../helpers/error';
 

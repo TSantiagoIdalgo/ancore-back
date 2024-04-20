@@ -24,15 +24,44 @@ service ReviewsService {
     rpc deleteReview (ReviewId) returns (Review) {}
 }
 
+service GenreService {
+    rpc getAllGenres (Empty) returns (Genres) {}
+    rpc getGenreById (GenreId) returns (Genre) {}
+    
+    rpc createGenre (Genre) returns (Genre) {}
+    rpc deleteGenre (GenreId) returns (Genre) {}
+}
+
+service BannerService {
+    rpc getAllBanners (Empty) returns (Banners) {}
+    rpc getBannerById (BannerId) returns (BannerData) {}
+
+    rpc createBanner (Banner) returns (BannerData) {}
+    rpc updateBanner (UpdateBanner) returns (BannerData) {}
+    rpc deleteBanner (BannerId) returns (BannerData) {}
+}
+
 message Empty {}
+
+message ProductFilter {
+    string name = 1;
+    int32 minPrice = 2;
+    int32 maxPrice = 3;
+    string platform = 4;
+    float score = 5;
+    repeated string genre = 6;
+    float discount = 7;
+}
 
 message ProductPaginate {
     int32 size = 1;
     int32 page = 2;
+    ProductFilter filter = 3;
 }
 
 message Size {
     int32 size = 1;
+    ProductFilter filter = 3;
 }
 
 message PagesResponse {
@@ -49,7 +78,7 @@ message Product {
     float score = 7;
     string distributor = 8;
     string developer = 9;
-    string genre = 10;
+    repeated string genre = 10;
     string description = 11;
     string trailer = 12;
     string mainImage = 13;
@@ -110,4 +139,45 @@ message UserReview {
 
 message UserReviews {
     repeated UserReview userReviews = 1;
+}
+
+message Genre {
+  int32 id = 1;
+  string genre = 2;
+}
+
+message Genres {
+  repeated Genre genres = 1;
+}
+
+message GenreId {
+    string genre = 1;
+}
+
+message Banner {
+    string mainImage = 1;
+    string subImage = 2;
+    string productId = 3;
+}
+
+message BannerData {
+    string mainImage = 1;
+    string subImage = 2;
+    string productId = 3;
+    string name = 4;
+    float price = 5;
+    float discount = 6;
+}
+
+message Banners {
+    repeated BannerData bannerData = 1;
+}
+
+message BannerId {
+    string bannerId = 1;
+}
+
+message UpdateBanner {
+    string bannerId = 1;
+    Banner banner = 2;
 }

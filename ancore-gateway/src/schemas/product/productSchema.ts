@@ -1,10 +1,6 @@
 import { gql } from 'graphql-tag';
 
 const productSchema = gql`
-    scalar Trailer
-    scalar MainImage
-    scalar Images
-
     type Product {
         id: String
         name: String
@@ -16,7 +12,7 @@ const productSchema = gql`
         score: Float
         distributor: String
         developer: String
-        genre: String
+        genre: [String]
         description: String
         trailer: String
         mainImage: String
@@ -33,18 +29,28 @@ const productSchema = gql`
         platform: String
         distributor: String
         developer: String
-        genre: String
+        genre: [String]
         description: String
     }
 
+    input ProductFilter {
+        name: String
+        minPrice: Float
+        maxPrice: Float
+        platform: String
+        score: Float
+        genre: [String]
+        discount: Float
+    }
+
     extend type Query {
-        getAllProducts(page: Int, size: Int): [Product!]!
+        getAllProducts(page: Int, size: Int, filter: ProductFilter): [Product!]!
         getProductById(productId: String!): Product
-        getTotalPages(size: Int): Int!
+        getTotalPages(size: Int, filter: ProductFilter): Int!
     }
 
     extend type Mutation {
-        updateProduct(productId: String!, product: ProductInput): Product
+        updateProduct(productId: String!, product: ProductInput!): Product
         deleteProduct(productId: String!): Product
     }
 `;

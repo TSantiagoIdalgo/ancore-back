@@ -50,14 +50,16 @@ message Product {
     float score = 7;
     string distributor = 8;
     string developer = 9;
-    string genre = 10;
+    repeated string genre = 10;
     string description = 11;
     string trailer = 12;
     string mainImage = 13;
     repeated string images = 14;
     int32 amount = 15;
-    int32 discount = 16;
+    float discount = 16;
 }
+
+
 message Favorite {
     string id = 1;
     string userId = 2;

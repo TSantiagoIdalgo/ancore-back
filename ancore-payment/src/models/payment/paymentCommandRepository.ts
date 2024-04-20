@@ -52,6 +52,15 @@ export default class PaymentCommandRepository {
       { new: true }
     );
     if (!acceptCart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+
+    acceptCart.products.forEach(async (product) => {
+      const productFind = await ProductSchema.findOne({ id: product.productId });
+      if (productFind) {
+        productFind.stock -= product.amount;
+        await productFind.save();
+      }
+    });
+
     return { total: acceptCart.total, products: cart.products, isPaid: acceptCart.isPaid };
   }
 

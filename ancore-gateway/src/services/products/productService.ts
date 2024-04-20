@@ -3,7 +3,7 @@ import ProductSetters from './productSetters';
 import GRPCErrorHandler from '../../helpers/error';
 import { ErrorDefs } from '../../types/error';
 import { GraphQLError } from 'graphql';
-import { IProductModel } from '../../types/products/products';
+import { IProductFilter, IProductModel } from '../../types/products/products';
 import { Product__Output } from '../../../proto/out/UserPackage/Product';
 
 
@@ -16,9 +16,9 @@ export default class ProductService {
     this.productSetters = productSetters;
   }
 
-  public async getAllProducts (page?: number, size?: number): Promise<Product__Output[]> {
+  public async getAllProducts (page?: number, size?: number, filter?: IProductFilter): Promise<Product__Output[]> {
     try {
-      const products = await this.productGetters.getProducts(page, size);
+      const products = await this.productGetters.getProducts(page, size, filter);
       if (!products.products) throw new GRPCErrorHandler(400, ErrorDefs.INVALID_INPUT);
       if (products.products?.length === 0) throw new GRPCErrorHandler(400, ErrorDefs.INVALID_INPUT);
 
@@ -45,10 +45,10 @@ export default class ProductService {
     }
   }
 
-  public async getPages (size: number) {
+  public async getPages (size: number, filter?: IProductFilter) {
     try {
       if (!size || size < 0) throw new GRPCErrorHandler(400, ErrorDefs.INVALID_INPUT);
-      return await this.productGetters.getPages(size);
+      return await this.productGetters.getPages(size, filter);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) {
         throw new GraphQLError(error.message, { extensions: { code: error.name }});

@@ -11,10 +11,10 @@ export default class ProductCommandRepository {
   }
 
   public update (id: string, data: IProductModel): Promise<IProductModel | null> {
-    return ProductSchema.findByIdAndUpdate({ id }, data, { new: true });
+    return ProductSchema.findOneAndUpdate({ id }, data, { new: true });
   }
 
   public delete (id: string): Promise<IProductModel | null> {
-    return ProductSchema.findOneAndUpdate({ id }, { disabled: true }, { new: true });
+    return ProductSchema.findOneAndDelete({ id }, { disabled: true });
   }
 }

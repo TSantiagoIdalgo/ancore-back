@@ -1,8 +1,9 @@
-import { IProductModel, IProductContent } from '../../types/products/products';
+import { IProductModel, IProductContent, IProductFilter } from '../../types/products/products';
 
 export interface Paginated {
   size: number;
-  page: number
+  page: number;
+  filter: IProductFilter
 }
   
 export interface ProductId {

@@ -10,13 +10,23 @@ export interface IProductModel {
   score: number
   distributor: string;
   developer: string;
-  genre: string
+  genre: string[];
   description: string;
   trailer?: string;
   mainImage: string;
   images: string[];
   discount: number;
   amount?: number;
+}
+
+export interface IProductFilter {
+    name?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    platform?: string;
+    score?: number;
+    genre?: string[];
+    discount?: number;
 }
 
 export interface IProducts extends Document<IProductModel>, IProductModel {}

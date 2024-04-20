@@ -6,10 +6,10 @@ import { ErrorDefs } from '../../types/error';
 import { unlinkSync } from 'fs';
 import { tokenVerify } from '../../helpers/token';
 import { IProductModel } from '../../types/products/products';
-import { v2 as cloudinary } from 'cloudinary';
 import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET_KEY } from '../../config/api';
 import { UploadedFile } from 'express-fileupload';
 import { userClient } from '../../config/clients';
+import { v2 as cloudinary } from 'cloudinary';
 
 
 export default class CreateProduct {
@@ -80,7 +80,7 @@ export default class CreateProduct {
       const result = await cloudinary.uploader.upload(tempFilePath, {
         folder: 'uploads',
         resource_type: 'auto',
-        use_filename: true,
+        use_filename: true
       });
       unlinkSync(tempFilePath);
 
@@ -117,5 +117,4 @@ export default class CreateProduct {
       else throw new Error(ErrorDefs.INTERNAL_ERROR);
     }
   }
-
 }
