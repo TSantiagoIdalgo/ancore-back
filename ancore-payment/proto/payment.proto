@@ -41,8 +41,9 @@ message Product {
     string trailer = 12;
     string mainImage = 13;
     repeated string images = 14;
-    int32 amount = 15;
-    float discount = 16;
+    string backgroundImage = 15;
+    int32 amount = 16;
+    float discount = 17;
 }
 
 message UserProduct {

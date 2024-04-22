@@ -69,11 +69,19 @@ const product = new Schema<IProductModel>({
     type: String,
     required: true
   },
+  backgroundImage: {
+    type: String,
+    required: true
+  },
   trailer: {
     type: String,
     required: false
   },
   amount: {
+    type: Number,
+    default: 0
+  },
+  discount: {
     type: Number,
     default: 0
   }

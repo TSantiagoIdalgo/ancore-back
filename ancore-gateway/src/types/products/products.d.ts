@@ -1,3 +1,5 @@
+import { UploadedFile } from 'express-fileupload';
+
 export interface IProductModel {
   id?: string;
   name: string;
@@ -14,13 +16,14 @@ export interface IProductModel {
   trailer?: string;
   mainImage: string;
   images: string[];
+  backgroundImage: string;
   amount?: number
 }
 
 export interface IProductContent {
-  trailer: File;
-  mainImage: File;
-  images: File[]; 
+  trailer?: UploadedFile;
+  mainImage?: UploadedFile;
+  images?: UploadedFile[]; 
 }
 
 export interface IProductFilter {

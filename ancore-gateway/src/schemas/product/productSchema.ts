@@ -48,11 +48,6 @@ const productSchema = gql`
         getProductById(productId: String!): Product
         getTotalPages(size: Int!, filter: ProductFilter): Int!
     }
-
-    extend type Mutation {
-        updateProduct(productId: String!, product: ProductInput!): Product
-        deleteProduct(productId: String!): Product
-    }
 `;
 
 export default productSchema;

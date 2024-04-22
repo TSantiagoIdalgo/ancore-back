@@ -2,4 +2,4 @@
 node_modules
 out
 build
-ecosystem.config.js
+ecosystem.config

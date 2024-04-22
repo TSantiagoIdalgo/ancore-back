@@ -57,6 +57,11 @@ export default class BannerMethods {
 
       res.status(201).json(bannerCreate);
     } catch (error) {
+      if (req.files) {
+        const { mainImage, subImage } = req.files;
+        if (!Array.isArray(mainImage)) unlinkSync(mainImage.tempFilePath);
+        if (!Array.isArray(subImage)) unlinkSync(subImage.tempFilePath);
+      }
       if (error instanceof Error) res.status(400).send(error.message);
       else res.status(400).json(error);
     }
@@ -76,9 +81,9 @@ export default class BannerMethods {
       const mainImage = banner.mainImage.match(/\/uploads\/([^\/]+)\./);
       if (!subImage || !mainImage) throw new Error(ErrorDefs.BAD_REQUEST);
 
+      const bannerDelete = await this.delete(id);
       await cloudinary.uploader.destroy(subImage[1]);
       await cloudinary.uploader.destroy(mainImage[1]);
-      const bannerDelete = await this.delete(id);
 
       res.status(200).json(bannerDelete);
     } catch (error) {

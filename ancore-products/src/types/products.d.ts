@@ -15,6 +15,7 @@ export interface IProductModel {
   trailer?: string;
   mainImage: string;
   images: string[];
+  backgroundImage: string;
   discount: number;
   amount?: number;
 }
