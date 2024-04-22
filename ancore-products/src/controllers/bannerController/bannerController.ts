@@ -45,10 +45,9 @@ export default class BannerController {
 
   public async createBanner (call: PT.TCreateBanner, callback: PT.TCreateBannerResponse) {
     try {
-      const { bannerData } = call.request;
-      if (!bannerData) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid banner data');
+      const request = call.request;
 
-      const banner = await this.bannerCommandRepository.create(bannerData);
+      const banner = await this.bannerCommandRepository.create(request);
 
       callback(null, banner);
     } catch (error) {

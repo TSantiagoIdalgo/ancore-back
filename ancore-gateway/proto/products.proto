@@ -27,7 +27,6 @@ service ReviewsService {
 service GenreService {
     rpc getAllGenres (Empty) returns (Genres) {}
     rpc getGenreById (GenreId) returns (Genre) {}
-    
     rpc createGenre (Genre) returns (Genre) {}
     rpc deleteGenre (GenreId) returns (Genre) {}
 }
@@ -128,7 +127,6 @@ message UserId {
 }
 
 message ProductsReviews {
-    Product product = 1;
     repeated Review Reviews = 2;
 }
 

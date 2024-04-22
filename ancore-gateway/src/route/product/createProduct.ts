@@ -79,8 +79,7 @@ export default class CreateProduct {
 
       const result = await cloudinary.uploader.upload(tempFilePath, {
         folder: 'uploads',
-        resource_type: 'auto',
-        use_filename: true
+        resource_type: 'auto'
       });
       unlinkSync(tempFilePath);
 

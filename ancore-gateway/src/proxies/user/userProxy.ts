@@ -41,7 +41,8 @@ export default class UserProxy implements IUserProxy {
       if (!userId) throw new GRPCErrorHandler(400, ErrorDefs.MISING_FIELD);
       if (!context.decodedToken) throw new GRPCErrorHandler(401, ErrorDefs.UNAUTHORIZED);
 
-      const user = await this.userService.getUser(userId);
+      const userIds = context.decodedToken ? context.decodedToken : userId;
+      const user = await this.userService.getUser(userIds);
       return user;
     } catch (error) {
       if (error instanceof GRPCErrorHandler) {

@@ -9,7 +9,7 @@ import { UpdateProduct__Output } from '../../proto/out/ProductsPackage/UpdatePro
 import { Reviews } from '../../proto/out/ProductsPackage/Reviews';
 import { Review } from '../../proto/out/ProductsPackage/Review';
 import { Review__Output } from '../../proto/out/ProductsPackage/Review';
-import { ReviewFromProduct } from '../../proto/out/ProductsPackage/ReviewFromProduct';
+import { ProductsReviews } from '../../proto/out/ProductsPackage/ProductsReviews';
 import { UserReviews } from '../../proto/out/ProductsPackage/UserReviews';
 import { ReviewId__Output } from '../../proto/out/ProductsPackage/ReviewId';
 import { UpdateReview__Output } from '../../proto/out/ProductsPackage/UpdateReview';
@@ -26,6 +26,7 @@ import { Genre__Output } from '../../proto/out/ProductsPackage/Genre';
 import { Banners } from '../../proto/out/ProductsPackage/Banners';
 import { BannerId__Output } from '../../proto/out/ProductsPackage/BannerId';
 import { BannerData } from './banner';
+import { Banner__Output } from '../../proto/out/ProductsPackage/Banner';
 import { UpdateBanner__Output } from '../../proto/out/ProductsPackage/UpdateBanner';
 
 // Product proto types
@@ -51,8 +52,8 @@ export type TDeleteProductResponse = sendUnaryData<Product>
 export type TGetAllReviews = ServerUnaryCall<Empty__Output, Reviews>
 export type TGetAllReviewsResponse = sendUnaryData<Reviews>
 
-export type TGetProductReviews = ServerUnaryCall<ProductId__Output, ReviewFromProduct>
-export type TGetProductReviewsResponse = sendUnaryData<ReviewFromProduct>
+export type TGetProductReviews = ServerUnaryCall<ProductId__Output, ProductsReviews>
+export type TGetProductReviewsResponse = sendUnaryData<ProductsReviews>
 
 export type TGetReviewById = ServerUnaryCall<ReviewId__Output, Review>
 export type TGetReviewByIdResponse = sendUnaryData<Review>

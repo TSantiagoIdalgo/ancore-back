@@ -16,7 +16,7 @@ export default class GenreRepository {
   async getGenre (genre: string) {
     try {
       if (!genre) throw new GRPCErrorHandler(400, 'Genre is required');
-      const genreFind = genreModel.findOne({ where: { name: genre } });
+      const genreFind = genreModel.findOne({ where: { genre: genre } });
       
       if (!genreFind) throw new GRPCErrorHandler(400, 'Genre not found');
       return genreFind;

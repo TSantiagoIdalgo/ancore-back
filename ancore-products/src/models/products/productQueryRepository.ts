@@ -9,9 +9,9 @@ export default class ProductQueryRepository {
 
   getFiltered(size: number, page: number, filter?: IProductFilter): Promise<IProductModel[]> {
     const query = this.getFilterQuery(filter);
+
     const skipAmount = (page - 1) * size;
     return ProductSchema.find(query).skip(skipAmount).limit(size).lean().exec();
-    
   }
 
   async getPages(size: number, filter?: IProductFilter): Promise<number> {
@@ -27,7 +27,7 @@ export default class ProductQueryRepository {
 
   private getFilterQuery (filter?: IProductFilter) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query: Record<string, any> = { ...filter };
+    const query: Record<string, any> = { };
     if (filter?.genre) query.genre = { $in: filter.genre };
     if (filter?.minPrice || filter?.maxPrice) {
       query.price = {};

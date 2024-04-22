@@ -1,7 +1,7 @@
 export interface IBanner {
-    mainImage: string;
-    subImage: string;
-    productId: string;
+    mainImage?: string;
+    subImage?: string;
+    productId?: string;
 }
 
 export interface BannerData {

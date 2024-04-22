@@ -46,7 +46,7 @@ const productSchema = gql`
     extend type Query {
         getAllProducts(page: Int, size: Int, filter: ProductFilter): [Product!]!
         getProductById(productId: String!): Product
-        getTotalPages(size: Int, filter: ProductFilter): Int!
+        getTotalPages(size: Int!, filter: ProductFilter): Int!
     }
 
     extend type Mutation {

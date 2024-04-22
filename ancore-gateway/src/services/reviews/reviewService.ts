@@ -85,9 +85,10 @@ export default class ReviewService {
 
   async createReview (review: IReviewModel) {
     try {
-      const validateReview = reviewValidate.parse(review);
+      const validateReview = reviewValidate.parse({ ...review });
       return await this.reviewSetter.createReview(validateReview);
     } catch (error) {
+      console.log(error);
       if (error instanceof GRPCErrorHandler) {
         throw new GraphQLError(error.message, { extensions: { code: error.name }});
       } else if (error instanceof Error) {

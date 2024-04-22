@@ -15,7 +15,7 @@ export default class ReviewCommandController {
   public async createReview (call: PT.TCreateReview, callback: PT.TCreateReviewResponse) {
     try {
       const review = call.request;
-      if (!review.id || !review.userId) {
+      if (!review.userId || !review.productId) {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Id and UserId are required');
       }
 
@@ -30,17 +30,19 @@ export default class ReviewCommandController {
   public async updateReview (call: PT.TUpdateReview, callback: PT.TUpdateReviewResponse) {
     try {
       const { userId, updateReview } = call.request;
+
       if (!userId) {
         throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'userId is required');
       }
 
-      if (!updateReview) {
-        throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Id is required');
+      if (!updateReview?.productId) {
+        throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'ProductId is required');
       }
 
       const reviewUpdate = await this.reviewCommandService.updateReview(updateReview as IReviewModel, userId);
       callback(null, reviewUpdate);
     } catch (error) {
+      console.error(error);
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
       else throw new GRPCErrorHandler(500, 'Internal server error');
     }

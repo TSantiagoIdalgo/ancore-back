@@ -27,7 +27,7 @@ const product = new Schema<IProductModel>({
     required: true
   },
   genre: {
-    type: String,
+    type: [String],
     required: true
   },
   score: {

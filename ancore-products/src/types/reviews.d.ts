@@ -16,8 +16,7 @@ export interface ReviewsProduct {
 }
 
 export interface ProductReviews {
-  product: IProducts;
-  reviews: IReviews[];
+  reviews: IReviewModel[];
 }
 
 export interface IReviews extends Model<IReviewModel>, IReviewModel {}

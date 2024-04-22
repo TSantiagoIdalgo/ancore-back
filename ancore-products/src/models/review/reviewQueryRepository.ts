@@ -15,12 +15,12 @@ export default class ReviewQueryRepository {
   }
 
   async getProductReviews (productId: string): Promise<ProductReviews> {
-    const product = await ProductSchema.findById(productId).lean().exec() as IProducts | null;
+    const product = await ProductSchema.findOne({ id: productId }).lean().exec() as IProducts | null;
     if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
     
-    const reviews = await reviewModel.findAll({ where: { productId }});
+    const reviews = (await reviewModel.findAll({ where: { productId }})).map(review => review.dataValues);
 
-    return { product, reviews };
+    return { reviews };
   }
 
   async getUsersReview (userId: string) {

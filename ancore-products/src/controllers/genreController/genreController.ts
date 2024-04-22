@@ -35,12 +35,15 @@ export default class GenreController {
   public async createGenre(call: PT.TCreateGenre, callback: PT.TCreateGenreResponse) {
     try {
       const { genre } = call.request;
+
       if (!genre) throw new GRPCErrorHandler(400, 'Genre is required');
-      const genreSintax = genre[0].toUpperCase() + genre.slice(1);
+
+      const genreSintax = genre[0].toUpperCase() + genre.slice(1).toLowerCase();
       const genreCreate = await this.genreRepository.createGenre(genreSintax);
 
       callback(null, genreCreate);
     } catch (error) {
+      console.error(error);
       if (error instanceof GRPCErrorHandler) callback(error);
       else callback(new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'), {});
     }

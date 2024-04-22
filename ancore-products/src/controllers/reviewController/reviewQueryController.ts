@@ -57,8 +57,9 @@ export default class ReviewQueryController {
         throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'The product has no reviews');
       }
 
-      callback(null, { productReviews });
+      callback(null, { Reviews: productReviews.reviews });
     } catch (error) {
+      console.error(error);
       if (error instanceof GRPCErrorHandler) callback(error);
       else callback(new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'), {});
     }

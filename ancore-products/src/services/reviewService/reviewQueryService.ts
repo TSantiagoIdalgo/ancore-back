@@ -43,11 +43,9 @@ export default class ReviewQueryService {
   public async getProductsReviews (productId: string) {
     try {
       const product = await this.productQueryRepository.getById(productId);
-        
       if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
 
       const productReviews = await this.reviewQueryRepository.getProductReviews(productId);
-
       if (productReviews.reviews.length === 0) {
         throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'The product has no reviews');
       }

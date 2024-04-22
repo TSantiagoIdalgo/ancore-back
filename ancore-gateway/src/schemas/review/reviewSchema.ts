@@ -18,21 +18,21 @@ const reviewSchema = gql`
   }
 
   type UserReviews {
-    userProduct: [Product]
-    userReviews: [Review]
+    userProduct: Product
+    userReviews: Review
   }
 
   extend type Query {
     getAllReviews: [Review]
-    getReviewById(reviewId: String): Review
-    getProductReviews(productId: String): [Review]
+    getReviewById(reviewId: String!): Review
+    getProductReviews(productId: String!): [Review]
     getUserReviews: [UserReviews]
   }
 
   extend type Mutation {
-    createReview(review: ReviewInput): Review
-    updateReview(review: ReviewInput): Review
-    deleteReview(reviewId: String): Review
+    createReview(review: ReviewInput!): Review
+    updateReview(review: ReviewInput!): Review
+    deleteReview(reviewId: String!): Review
   }
 `;
 

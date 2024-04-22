@@ -32,7 +32,7 @@ export default class PaymentCommandController {
       if (!id) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Missing data');
 
       const payment = await this.paymentCommandService.acceptPayment(id);
-
+      
       callback(null, payment);
     } catch (error) {
       if (error instanceof GRPCErrorHandler) callback(error);

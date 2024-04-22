@@ -20,7 +20,7 @@ export default class ReviewCommandRepository {
   }
 
   async update (review: IReviewModel, userId: string): Promise<IReviews> {
-    const reviewFind = await reviewModel.findOne({ where: { userId, id: review.id } });
+    const reviewFind = await reviewModel.findOne({ where: { userId, productId: review.productId } });
     if (!reviewFind) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Review not found');
 
     reviewFind.set(review);

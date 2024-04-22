@@ -10,7 +10,7 @@ export interface IProductModel {
   score: number
   distributor: string;
   developer: string;
-  genre: string
+  genre: string[]
   description: string;
   trailer?: string;
   mainImage: string;

@@ -18,3 +18,7 @@ export interface ProductReviews {
   product: IProductModel;
   reviews: IReviews[];
 }
+
+export interface CreateReview {
+  review: IReviewModel;
+}

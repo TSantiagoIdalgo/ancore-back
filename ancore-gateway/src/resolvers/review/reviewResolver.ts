@@ -4,7 +4,7 @@ import ReviewSetter from '../../services/reviews/reviewSetter';
 import ReviewService from '../../services/reviews/reviewService';
 import ReviewProxy from '../../proxies/reviews/ReviewProxy';
 import { ServerContext } from '../user/userResolverTypes';
-import { IReviewModel } from '../../types/reviews/reviews';
+import { CreateReview } from '../../types/reviews/reviews';
 
 const reviewGetters = new ReviewGetter(reviewClient);
 const reviewSetters = new ReviewSetter(reviewClient);
@@ -31,10 +31,10 @@ const reviewResolver = {
       await reviewProxy.getUserReview(context)
   },
   Mutation: {
-    createReview: async (_root: IReviewModel, args: IReviewModel, context: ServerContext) =>
-      await reviewProxy.createReview(context, args),
-    updateReview: async (_root: IReviewModel, args: IReviewModel, context: ServerContext) =>
-      await reviewProxy.updateReview(context, args),
+    createReview: async (_root: CreateReview, args: CreateReview, context: ServerContext) =>
+      await reviewProxy.createReview(context, args.review),
+    updateReview: async (_root: CreateReview, args: CreateReview, context: ServerContext) =>
+      await reviewProxy.updateReview(context, args.review),
     deleteReview: async (_root: ReveiwId, args: ReveiwId, context: ServerContext) =>
       await reviewProxy.deleteReview(context, args.reviewId)
   }

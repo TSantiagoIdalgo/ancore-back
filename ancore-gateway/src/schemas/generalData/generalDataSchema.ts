@@ -27,7 +27,7 @@ const generalDataSchema = gql`
     }
 
     extend type Mutation {
-        createGenre(genre: GenreInput): Genre!
+        createGenre(genre: String!): Genre!
         deleteGenre(genreId: String!): Genre
     }
 `;

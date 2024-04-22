@@ -28,21 +28,19 @@ export function purchaseEmail (name: string, cart: CartForEmails) {
     </div>
     <div style="
       background-color: #111; 
-      width: 100%; 
-      height: 800px; 
+      width: 100%;
+      min-height: 600px; 
+      height: 100%; 
       font-family: sans-serif; 
       text-align: center;
       position: relative;">
       <div style="
-        position: absolute;
         height: 100%;
         width: 80%;
         background-color: #272727;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        margin: 0 auto;
         border-radius: 14px;">
-          <h1 style="color: #fff; font-size: 2.5rem; ">Hi 👋 <span style="color: #ff5400;">${name}</span></h1>
+          <h1 style="color: #fff; font-size: 2.5rem; display: inline-block">Hi 👋 <span style="color: #ff5400;">${name}</span></h1>
 
           <p style="color: #fff;font-size: 1.5rem;">Your purchase of: $${cart.total} has been made successfully, enjoy it!</p>
 
@@ -54,7 +52,7 @@ export function purchaseEmail (name: string, cart: CartForEmails) {
 
   content += `<div style="display: block;">
             <span style="font-size: 16px; color: #fff; font-size: 1.4rem;">
-              You buyed ${cart.products[0].name} ${cart.products.length > 1 ? `and antoher ${cart.products.length - 1} products` : ''}
+              You buyed ${cart.products[0].name} ${cart.products.length > 1 ? `and another ${cart.products.length - 1} products` : ''}
             </span>
           </div>
         </div>
