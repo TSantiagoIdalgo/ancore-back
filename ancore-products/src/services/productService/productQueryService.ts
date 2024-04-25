@@ -22,6 +22,7 @@ export default class ProductQueryService {
       }
 
       const products = await this.productQueryRepository.getAll();
+
       if (products.length === 0) {
         throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Products not found');
       }

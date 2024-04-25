@@ -160,12 +160,13 @@ message Banner {
 }
 
 message BannerData {
-    string mainImage = 1;
-    string subImage = 2;
-    string productId = 3;
-    string name = 4;
-    float price = 5;
-    float discount = 6;
+    string id = 1;
+    string mainImage = 2;
+    string subImage = 3;
+    string productId = 4;
+    string name = 5;
+    float price = 6;
+    float discount = 7;
 }
 
 message Banners {

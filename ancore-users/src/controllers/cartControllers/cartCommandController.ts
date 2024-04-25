@@ -62,7 +62,6 @@ export default class CartCommandController {
         call.end();
       });
     } catch (error) {
-      console.log(error);
       if (error instanceof GRPCErrorHandler) throw new GRPCErrorHandler(error.code, error.message);
       else throw new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error');
     }

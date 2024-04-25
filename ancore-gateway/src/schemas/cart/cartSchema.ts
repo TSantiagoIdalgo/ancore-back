@@ -17,10 +17,11 @@ const cartSchema = gql`
 
   extend type Query {
     getUserCart: Cart!
+    getUserPaidProducts: [Product]!
   }
 
   extend type Mutation {
-    updateCart(action: ActionCart, productId: String!): Cart!
+    updateCart(action: ActionCart!, productId: String!): Cart!
   }
 
   extend type Subscription {

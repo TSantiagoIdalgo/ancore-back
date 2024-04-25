@@ -19,6 +19,7 @@ const bannerModel = sequelize.define<IBannerModel>('banner', {
   productId: {
     type: DataTypes.UUID,
     allowNull: false,
+    unique: true
   }
 });
 

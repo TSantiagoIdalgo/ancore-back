@@ -10,15 +10,15 @@ export default class BannerQueryRepository {
     if (banners.length === 0) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Banners not found');
     const bannersData: BannerData[] = [];
 
-    banners.forEach(async (banner) => {
-      const product = await ProductSchema.findOne({ id: banner.productId });
-      if (product) bannersData.push({ 
+    await Promise.all(banners.map(async (banner) => {
+      const product = await ProductSchema.findOne({ id: banner.dataValues.productId });
+      if (product !== null) bannersData.push({ 
         ...banner.dataValues, 
         name: product.name,
         price: product.price,
         discount: product.discount,
       });
-    });
+    }));
 
     return bannersData;
   }
@@ -27,7 +27,7 @@ export default class BannerQueryRepository {
     const banner = await bannerModel.findOne({ where: { id } });
     if (!banner) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Banner not found');
     
-    const product = await ProductSchema.findOne({ id: banner.productId });
+    const product = await ProductSchema.findOne({ id: banner.dataValues.productId });
     if (!product) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
     return {
       ...banner.dataValues,

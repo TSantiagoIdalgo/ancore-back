@@ -46,4 +46,22 @@ export default class CartService {
       } else throw new GraphQLError(ErrorDefs.INTERNAL_ERROR, { extensions: { code: 500 } });
     }
   }
+
+  public async getUserPaidProducts (userId: string) {
+    try {
+      if (!userId) throw new GRPCErrorHandler(400, ErrorDefs.BAD_REQUEST);
+      const cart = await this.cartGetter.getPaidProducts(userId);
+
+      if (!cart.products) throw new GRPCErrorHandler(404, ErrorDefs.NOT_FOUND);
+      if (!cart.products.length) throw new GRPCErrorHandler(404, ErrorDefs.NOT_FOUND);
+
+      return cart.products;
+    } catch (error) {
+      if (error instanceof GRPCErrorHandler) {
+        throw new GraphQLError(error.message, { extensions: { code: error.name }});
+      } else if (error instanceof Error) {
+        throw new GraphQLError(error.message, { extensions: { code: 400 } });
+      } else throw new GraphQLError(ErrorDefs.INTERNAL_ERROR, { extensions: { code: 500 } });
+    }
+  }
 }

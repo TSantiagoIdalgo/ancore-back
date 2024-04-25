@@ -40,7 +40,7 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
   app.use(fileUpload({ useTempFiles: true }));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
-  app.use('/graphql/upload', productRouter);
+  app.use('/graphql/product', productRouter);
   app.use('/graphql/payment', paymentRouter);
   app.use('/graphql/banner', bannerRoute);
   app.use('/graphql', 

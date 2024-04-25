@@ -15,6 +15,6 @@ productRouter.put('/:id', createProduct.updateProduct);
 
 productRouter.delete('/:id', createProduct.deleteProduct);
 
-productRouter.delete('/:productId/:fileUrl', createProduct.deleteProductImage);
+productRouter.delete('/', createProduct.deleteProductImage);
 
 export default productRouter;

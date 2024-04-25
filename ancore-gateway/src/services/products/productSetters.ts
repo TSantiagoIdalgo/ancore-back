@@ -12,7 +12,6 @@ export default class ProductSetters {
 
   public async create(product: IProductModel): Promise<Product__Output> {
     return new Promise<Product__Output>((res, rej) => {
-      console.log(product);
       this.client.createProduct({ ...product}, (err, result) => {
         if (err || !result) {
           if (!err?.code) {

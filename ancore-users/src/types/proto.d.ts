@@ -45,6 +45,9 @@ export type banResponse = sendUnaryData<User>
 export type UserProducts = ServerUnaryCall<UserId__Output, Products>
 export type UserProductsResponse = sendUnaryData<Products>
 
+export type UserPaidProducts = ServerUnaryCall<UserId__Output, Products>
+export type UserPaidProductsResponse = sendUnaryData<Products>
+
 export type UpdateCart = ServerDuplexStream<UserProductRequest__Output, UserProduct>
 
 // WhiteList proto types

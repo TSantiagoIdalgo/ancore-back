@@ -2,12 +2,13 @@ import { gql } from 'graphql-tag';
 
 const generalDataSchema = gql`
     type Banner {
+        id: String
         mainImage: String
         subImage: String
         productId: String
         name: String
-        price: Int
-        discount: Int
+        price: Float
+        discount: Float
     }
 
     type Genre {

@@ -30,6 +30,7 @@ export default class BannerController {
   public async getBannerById (call: PT.TGetBanner, callback: PT.TGetBannerResponse) {
     try {
       const { bannerId } = call.request;
+
       if (!bannerId) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid banner id');
 
       const banner = await this.bannerQueryRepository.getOne(bannerId);

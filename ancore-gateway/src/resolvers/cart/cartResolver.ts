@@ -16,7 +16,9 @@ interface UpdateCart {
 const cartResolver = {
   Query: {
     getUserCart: async (_root: unknown, _args: unknown, context: ServerContext) => 
-      await cartProxy.getUserCart(context)
+      await cartProxy.getUserCart(context),
+    getUserPaidProducts: async (_root: unknown, _args: unknown, context: ServerContext) =>
+      await cartProxy.getUserPaidProducts(context)
   },
   Mutation: {
     updateCart: async (_root: UpdateCart, args: UpdateCart, context: ServerContext) =>

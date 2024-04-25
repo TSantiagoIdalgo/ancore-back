@@ -9,7 +9,7 @@ export default class CartCommandRepository {
   async addProduct (userId: string, productId: string) {
     let cart = await UserCartSchema.findOne({ userId, isPaid: false });
     const product = await ProductSchema.findOne({ id: productId });
-    
+
     if (!product) {
       throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Product not found');
     }
@@ -24,7 +24,7 @@ export default class CartCommandRepository {
 
     const productFind = cart.products.findIndex(p => p.productId === productId);
 
-    if (cart.products.length > 0) {
+    if (cart.products.length > 0 && productFind !== -1) {
       if (cart.products[productFind].amount >= product.stock) {
         throw new GRPCErrorHandler(grpc.status.FAILED_PRECONDITION, 'Product out of stock');
       }

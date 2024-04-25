@@ -24,4 +24,20 @@ export default class CartGetter {
       });
     });
   }
+
+  async getPaidProducts (userId: string) {
+    return new Promise<Products__Output>((res, rej) => {
+      this.client.getUserPaidProducts({ id: userId }, (err, result) => {
+        if (err || !result) {
+          if (!err?.code) {
+            rej(err);
+            return;
+          }
+          rej(new GRPCErrorHandler(err.code, err.message, err.details));
+          return;
+        }
+        res(result);
+      });
+    });
+  }
 }

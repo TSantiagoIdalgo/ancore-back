@@ -1,10 +1,9 @@
 import ProductSetters from '../../services/products/productSetters';
 import ProductGetters from '../../services/products/productGetters';
 import UserGetters from '../../services/users/userGetters';
-import productValidate from '../../helpers/validates/productValidate';
 import { Request, Response } from 'express';
 import { ErrorDefs } from '../../types/error';
-import { unlinkSync } from 'fs';
+import { unlinkSync, existsSync } from 'fs';
 import { tokenVerify } from '../../helpers/token';
 import { IProductModel, IProductContent } from '../../types/products/products';
 import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET_KEY } from '../../config/api';
@@ -36,19 +35,11 @@ export default class CreateProduct {
       if (Array.isArray(trailer) || !trailer) throw new Error(ErrorDefs.INVALID_INPUT);
       if (Array.isArray(mainImage) || !mainImage) throw new Error(ErrorDefs.INVALID_INPUT);
       if (Array.isArray(backgroundImage) || !backgroundImage) throw new Error(ErrorDefs.INVALID_INPUT);
-      productValidate.parse(product);
 
-      const [uploadTrailer, uploadImage, uploadBackgroundImage,...uploadImages] = await Promise.all([
-        this.uploadFile(trailer),
-        this.uploadFile(mainImage),
-        this.uploadFile(backgroundImage),
-        ...images.map(image => this.uploadFile(image))
-      ]);
-      
       const newProduct = {
         name: product.name,
-        price: product.price,
-        stock: product.stock,
+        price: Number(product.price),
+        stock: Number(product.stock),
         disabled: false,
         platform: product.platform,
         score: 0.0,
@@ -56,18 +47,35 @@ export default class CreateProduct {
         developer: product.developer,
         genre: product.genre,
         description: product.description,
-        trailer: uploadTrailer,
-        mainImage: uploadImage,
-        images: uploadImages,
-        backgroundImage: uploadBackgroundImage,
+        trailer: await this.uploadFile(trailer),
+        mainImage: await this.uploadFile(mainImage),
+        images: await Promise.all(images.map(image => this.uploadFile(image))),
+        backgroundImage: await this.uploadFile(backgroundImage),
         amount: 0,
-        discount: product.discount
+        discount: Number(product.discount)
       };
 
       const productCreate = await this.productSetter.create(newProduct);
 
       res.status(201).json(productCreate);
     } catch (error) {
+      if (req.files) {
+        const { mainImage, images, trailer, backgroundImage } = req.files;
+        if (!Array.isArray(mainImage) && existsSync(mainImage.tempFilePath)) {
+          unlinkSync(mainImage.tempFilePath);
+        }
+        if (!Array.isArray(trailer) && existsSync(trailer.tempFilePath)) {
+          unlinkSync(trailer.tempFilePath);
+        }
+        if (Array.isArray(images)) {
+          images.map(image => {
+            if (existsSync(image.tempFilePath)) unlinkSync(image.tempFilePath);
+          });
+        }
+        if (!Array.isArray(backgroundImage) && existsSync(backgroundImage.tempFilePath)) {
+          unlinkSync(backgroundImage.tempFilePath);
+        }
+      }
       if (error instanceof Error) {
         res.status(400).json(error.message);
       } else res.status(500).json(ErrorDefs.INTERNAL_ERROR);
@@ -102,12 +110,10 @@ export default class CreateProduct {
     try {
       const { id } = req.params;
       const { mainImage, images, trailer } = req.files as IProductContent;
+      if (!id) throw new Error(ErrorDefs.INVALID_INPUT);
       const productUpdate = req.body as IProductModel;
       const product = await this.productGetter.getProduct(id);
       if (!product) throw new Error(ErrorDefs.INVALID_INPUT); 
-      if (!id) throw new Error(ErrorDefs.INVALID_INPUT);
-      const productValidateOptional = productValidate.partial();
-      productValidateOptional.parse(productUpdate);
 
       if (mainImage && product.mainImage) {
         await this.deleteFile(product.mainImage);
@@ -116,21 +122,22 @@ export default class CreateProduct {
       }
 
       if (images) {
-        if (product.images && product.images.length > 6) throw new Error(ErrorDefs.INVALID_INPUT);
+        if (product.images && product.images.length > 5) throw new Error(ErrorDefs.INVALID_INPUT);
         if (product.images) {
-          if ((images.length + product.images.length) >= 6) {
+          if ((images.length + product.images.length) > 5) {
             throw new Error(ErrorDefs.INVALID_INPUT);
           }
         }
         if (Array.isArray(images)) {
           const uploadImages = await Promise.all(images.map(image => this.uploadFile(image)));
-          productUpdate.images = uploadImages;
-        } else if (product.images) {
-          const uploadImage = await this.uploadFile(images);
-          productUpdate.images = [...product.images, uploadImage];
+          if (product.images && product.images.length >= 1) {
+            productUpdate.images = [...product.images, ...uploadImages];
+          } else productUpdate.images = uploadImages;
         } else {
-          const uploadImage = await this.uploadFile(images);
-          productUpdate.images = [uploadImage];
+          const uploadImages = await this.uploadFile(images);
+          if (product.images && product.images.length >= 1) {
+            productUpdate.images = [...product.images, uploadImages];
+          } else productUpdate.images = [uploadImages];
         }
       }
 
@@ -143,6 +150,21 @@ export default class CreateProduct {
       const productUpdated = await this.productSetter.update(id, productUpdate);
       res.status(200).json(productUpdated);
     } catch (error) {
+      if (req.files) {
+        const { mainImage, images, trailer } = req.files;
+        if (Array.isArray(mainImage)) {
+          mainImage.map(image => { if (existsSync(image.tempFilePath)) unlinkSync(image.tempFilePath); });
+        } else if (mainImage) unlinkSync(mainImage.tempFilePath);
+
+        if (Array.isArray(trailer)) {
+          trailer.map(trail => { if (existsSync(trail.tempFilePath)) unlinkSync(trail.tempFilePath); });
+        } else if (trailer) unlinkSync(trailer.tempFilePath);
+
+        if (Array.isArray(images)) {
+          images.map(image => { if (existsSync(image.tempFilePath)) unlinkSync(image.tempFilePath); });
+        } else if (images) unlinkSync(images.tempFilePath);
+      }
+
       if (error instanceof ZodError) res.status(400).json({ error: error.message });
       else if (error instanceof Error) res.status(400).json({ error: error.message });
       else res.status(500).json(ErrorDefs.INTERNAL_ERROR);
@@ -151,15 +173,15 @@ export default class CreateProduct {
 
   public deleteProductImage = async (req: Request, res: Response) => {
     try {
-      const { fileUrl, productId } = req.params;
+      const { fileUrl, productId } = req.query;
+      if (!productId || typeof productId !== 'string') throw new Error(ErrorDefs.INVALID_INPUT);
+      if (!fileUrl || typeof fileUrl !== 'string') throw new Error(ErrorDefs.INVALID_INPUT);
       const product = await this.productGetter.getProduct(productId);
       if (!product || !product.images) throw new Error(ErrorDefs.NOT_FOUND);
-      if (!product.images.includes(fileUrl)) throw new Error(ErrorDefs.NOT_FOUND);
+      if (!product.images.some(image => image === fileUrl)) throw new Error(ErrorDefs.NOT_FOUND);
       if (product.images.length === 1) throw new Error(ErrorDefs.INVALID_INPUT);
-      if (!fileUrl) throw new Error(ErrorDefs.INVALID_INPUT);
 
       const productWithoutImage = {
-        ...product,
         images: product.images.filter(image => image !== fileUrl)
       } as IProductModel;
 
@@ -189,17 +211,13 @@ export default class CreateProduct {
         folder: 'uploads',
         resource_type: 'auto'
       });
-      unlinkSync(tempFilePath);
+      if (existsSync(tempFilePath)) unlinkSync(tempFilePath);
 
       return result.secure_url;
     } catch (error) {
-      if (error instanceof Error) {
-        unlinkSync(tempFilePath);
-        throw new Error(error.message);
-      } else {
-        unlinkSync(tempFilePath);
-        throw new Error(ErrorDefs.INTERNAL_ERROR);
-      }
+      if (existsSync(tempFilePath)) unlinkSync(tempFilePath);
+      if (error instanceof Error) throw new Error(error.message);
+      else throw new Error(ErrorDefs.INTERNAL_ERROR);
     }
   }
 
@@ -207,7 +225,7 @@ export default class CreateProduct {
     try {
       // eslint-disable-next-line no-useless-escape
       const id = publicId.match(/\/uploads\/([^\/]+)\./);
-      if (id && id[1]) await cloudinary.uploader.destroy(publicId);
+      if (id && id[1]) await cloudinary.uploader.destroy(`uploads/${id[1]}`);
       else throw new Error(ErrorDefs.NOT_FOUND);
       return;
     } catch (error) {

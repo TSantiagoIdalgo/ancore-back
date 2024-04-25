@@ -6,6 +6,8 @@ const bannerMethods = new BannerMethods();
 
 bannerRoute.post('/:productId', express.json(), bannerMethods.createBanner);
 
-bannerRoute.delete('/:bannerId', bannerMethods.deleteBanner);
+bannerRoute.delete('/:id', bannerMethods.deleteBanner);
+
+bannerRoute.put('/:id', express.json(), bannerMethods.updateBanner);
 
 export default bannerRoute;

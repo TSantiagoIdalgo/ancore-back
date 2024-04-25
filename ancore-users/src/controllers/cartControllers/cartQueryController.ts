@@ -24,4 +24,19 @@ export default class CartQueryController {
       else callback(new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'), {});
     }
   }
+
+  public async getUserPaidProducts (call: PT.UserPaidProducts, callback: PT.UserPaidProductsResponse) {
+    try {
+      const { id } = call.request;
+      if (!id) throw new GRPCErrorHandler(grpc.status.INVALID_ARGUMENT, 'Invalid argument');
+
+      const userProducts = await this.cartQueryService.getUserPaidProducts(id);
+      if (!userProducts.length) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'User products not found');
+
+      callback(null, { products: userProducts });
+    } catch (error) {
+      if (error instanceof GRPCErrorHandler) callback(error);
+      else callback(new GRPCErrorHandler(grpc.status.INTERNAL, 'Internal server error'), {});
+    }
+  }
 }

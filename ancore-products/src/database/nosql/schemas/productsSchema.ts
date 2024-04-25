@@ -3,6 +3,7 @@ import { IProductModel } from '../../../types/products';
 import { Schema } from 'mongoose';
 import mongoose from 'mongoose';
 import genreModel from '../../sql/tables/genreModel';
+import { Op } from 'sequelize';
 
 const product = new Schema<IProductModel>({
   id: {
@@ -33,8 +34,10 @@ const product = new Schema<IProductModel>({
     validate: {
       validator: async (value: string[]) => {
         for (const genre of value) {
-          const genreFound = await genreModel.findOne({ where: { genre } });
-          if (!genreFound) return false;
+          const genreFound = await genreModel.findOne({ where: { genre: {
+            [Op.iLike]: `%${genre}%`
+          } } });
+          if (genreFound === null) return false;
         }
         return true;
       },

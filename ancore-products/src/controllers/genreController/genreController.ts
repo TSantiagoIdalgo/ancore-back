@@ -37,9 +37,7 @@ export default class GenreController {
       const { genre } = call.request;
 
       if (!genre) throw new GRPCErrorHandler(400, 'Genre is required');
-
-      const genreSintax = genre[0].toUpperCase() + genre.slice(1).toLowerCase();
-      const genreCreate = await this.genreRepository.createGenre(genreSintax);
+      const genreCreate = await this.genreRepository.createGenre(genre);
 
       callback(null, genreCreate);
     } catch (error) {

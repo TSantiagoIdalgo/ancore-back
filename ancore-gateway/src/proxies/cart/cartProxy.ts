@@ -50,4 +50,19 @@ export default class CartProxy {
       } throw new GraphQLError(ErrorDefs.INTERNAL_ERROR);
     }
   }
+
+  public async getUserPaidProducts (context: ServerContext) {
+    try {
+      const userId = context.decodedToken;
+      if (!userId) throw new GraphQLError(ErrorDefs.UNAUTHORIZED);
+
+      return await this.cartService.getUserPaidProducts(userId);
+    } catch (error) {
+      if (error instanceof GRPCErrorHandler) {
+        throw new GraphQLError(error.message, { extensions: { code: error.code } });
+      } else if (error instanceof GraphQLError) {
+        throw new GraphQLError(error.message, { extensions: { code: error.extensions.code } });
+      } throw new GraphQLError(ErrorDefs.INTERNAL_ERROR);
+    }
+  }
 }

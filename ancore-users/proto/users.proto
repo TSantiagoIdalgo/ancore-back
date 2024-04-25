@@ -17,6 +17,8 @@ service UserService {
 
 service UserProductService {
     rpc getAllProducts (UserId) returns (UserProduct) {}
+    rpc getUserPaidProducts (UserId) returns (Products) {}
+
     rpc updateCart (stream UserProductRequest) returns (stream UserProduct) {}
 }
 

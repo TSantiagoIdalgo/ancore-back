@@ -24,4 +24,19 @@ export default class CartQueryRepository {
 
     return cart.total;
   }
+
+  async getPaidProducts (userId: string): Promise<IProductModel[]> {
+    const cart = await UserCartSchema.find({ userId, isPaid: true });
+    if (!cart) throw new GRPCErrorHandler(grpc.status.NOT_FOUND, 'Cart not found');
+
+    const products: IProductModel[] = [];
+    await Promise.all(cart.map(async cartPaid => {
+      return Promise.all(cartPaid.products.map(async (product) => {
+        const productFind = await ProductSchema.findOne({ id: product.productId }).lean().exec();
+        if (productFind !== null) products.push({ ...productFind, amount: product.amount });
+      }));
+    }));
+
+    return products;
+  }
 }

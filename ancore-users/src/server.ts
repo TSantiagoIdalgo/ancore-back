@@ -50,6 +50,10 @@ export function ServerHandlers () {
     getAllProducts: (call, callback) => { 
       handlers.cartQueryController.getUserCart(call, callback); 
     },
+    getUserPaidProducts: (call, callback) => {
+      handlers.cartQueryController.getUserPaidProducts(call, callback);
+    },
+
     updateCart: (call) => {
       handlers.cartCommandController.addProductToCart(call);
     }

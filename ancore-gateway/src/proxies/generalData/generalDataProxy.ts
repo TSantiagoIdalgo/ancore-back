@@ -15,7 +15,8 @@ export default class GeneralDataProxy {
 
   public async getAllBanners () {
     try {
-      return await this.generalDataService.getAllBanners();
+      const banners = await this.generalDataService.getAllBanners();
+      return banners;
     } catch (error) {
       if (error instanceof GRPCErrorHandler) {
         throw new GraphQLError(error.message, { extensions: { code: error.code } });

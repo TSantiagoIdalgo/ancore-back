@@ -7,7 +7,7 @@ import { tokenVerify } from '../../helpers/token';
 import { BannerData__Output } from '../../../proto/out/ProductsPackage/BannerData';
 import { IBanner } from '../../types/general/banner';
 import { UploadedFile } from 'express-fileupload';
-import { unlinkSync } from 'fs';
+import { unlinkSync, existsSync } from 'fs';
 import { CLOUD_NAME, CLOUD_KEY, CLOUD_SECRET_KEY } from '../../config/api';
 import { v2 as cloudinary } from 'cloudinary';
 import GRPCErrorHandler from '../../helpers/error';
@@ -29,15 +29,17 @@ export default class BannerMethods {
   }
 
   public createBanner = async (req: Request, res: Response) => {
+    const banner = await this.generalDataGettter.getBanners();
     try {
       if (!req.files) throw new Error(ErrorDefs.INVALID_INPUT);
-
       const userId = tokenVerify(req);
       if (!userId) throw new Error(ErrorDefs.UNAUTHORIZED);
 
       const { productId } = req.params;
       const { mainImage, subImage } = req.files;
-
+      if (banner.bannerData?.some(banner => banner.productId === productId)) {
+        throw new Error(ErrorDefs.ALREADY_EXISTS);
+      }
       if (Array.isArray(mainImage) || !mainImage) throw new Error(ErrorDefs.INVALID_INPUT);
       if (Array.isArray(subImage) || !subImage) throw new Error(ErrorDefs.INVALID_INPUT);
       if (!productId) throw new Error(ErrorDefs.INVALID_INPUT);
@@ -58,9 +60,13 @@ export default class BannerMethods {
       res.status(201).json(bannerCreate);
     } catch (error) {
       if (req.files) {
-        const { mainImage, subImage } = req.files;
-        if (!Array.isArray(mainImage)) unlinkSync(mainImage.tempFilePath);
-        if (!Array.isArray(subImage)) unlinkSync(subImage.tempFilePath);
+        const { subImage, mainImage } = req.files;
+        if (!Array.isArray(subImage) && existsSync(subImage.tempFilePath)) {
+          unlinkSync(subImage.tempFilePath);
+        }
+        if (!Array.isArray(mainImage) && existsSync(mainImage.tempFilePath)) {
+          unlinkSync(mainImage.tempFilePath);
+        }
       }
       if (error instanceof Error) res.status(400).send(error.message);
       else res.status(400).json(error);
@@ -73,17 +79,17 @@ export default class BannerMethods {
       if (!userId) throw new Error(ErrorDefs.UNAUTHORIZED);
 
       const { id } = req.params;
-      
+
       const banner = await this.generalDataGettter.getBenner(id);
       if (!banner) throw new Error(ErrorDefs.NOT_FOUND);
       if (!banner.subImage || !banner.mainImage) throw new Error(ErrorDefs.BAD_REQUEST);
       const subImage = banner.subImage.match(/\/uploads\/([^\/]+)\./);
       const mainImage = banner.mainImage.match(/\/uploads\/([^\/]+)\./);
       if (!subImage || !mainImage) throw new Error(ErrorDefs.BAD_REQUEST);
-
+      
       const bannerDelete = await this.delete(id);
-      await cloudinary.uploader.destroy(subImage[1]);
-      await cloudinary.uploader.destroy(mainImage[1]);
+      await cloudinary.uploader.destroy(`uploads/${subImage[1]}`);
+      await cloudinary.uploader.destroy(`uploads/${mainImage[1]}`);
 
       res.status(200).json(bannerDelete);
     } catch (error) {
@@ -107,22 +113,31 @@ export default class BannerMethods {
       const subImageId = banner.subImage?.match(/\/uploads\/([^\/]+)\./);
       const mainImageId = banner.mainImage?.match(/\/uploads\/([^\/]+)\./);
       
-      if (subImageId && subImage) await cloudinary.uploader.destroy(subImageId[1]);
-      if (mainImageId && mainImage) await cloudinary.uploader.destroy(mainImageId[1]);
+      if (subImageId && subImage) await cloudinary.uploader.destroy(`uploads/${subImageId[1]}`);
+      if (mainImageId && mainImage) await cloudinary.uploader.destroy(`uploads/${mainImageId[1]}`);
 
       if (mainImage) {
         const uploadMainImage = await this.uploadFile(mainImage);
-        await this.update(id, { mainImage: uploadMainImage });
+        await this.update(id, { mainImage: uploadMainImage, productId: banner.productId });
       }
 
       if (subImage) {
         const uploadSubImage = await this.uploadFile(subImage);
-        await this.update(id, { subImage: uploadSubImage });
+        await this.update(id, { subImage: uploadSubImage, productId: banner.productId });
       }
 
       const updatedBanner = await this.generalDataGettter.getBenner(id);
       res.status(200).json(updatedBanner);
     } catch (error) {
+      if (req.files) {
+        const { subImage, mainImage } = req.files;
+        if (!Array.isArray(subImage) && existsSync(subImage.tempFilePath)) {
+          unlinkSync(subImage.tempFilePath);
+        }
+        if (!Array.isArray(mainImage) && existsSync(mainImage.tempFilePath)) {
+          unlinkSync(mainImage.tempFilePath);
+        }
+      }
       if (error instanceof Error) res.status(400).send(error.message);
       else res.status(400).send(ErrorDefs.INTERNAL_ERROR);
     }
