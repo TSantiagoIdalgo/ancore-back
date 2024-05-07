@@ -22,6 +22,8 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
 
   const app = express();
   const httpServer = createServer(app);
+  const wsServer = new WebSocketServer({ server: httpServer, path: '/graphql' });
+  const serverCleanup = useServer({ schema }, wsServer);
   const apolloServer = new ApolloServer({
     schema,
     csrfPrevention: true,
@@ -31,11 +33,8 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
     }]
   });
 
-  const wsServer = new WebSocketServer({ server: httpServer, path: '/graphql' });
-  const serverCleanup = useServer({ schema }, wsServer);
   await apolloServer.start();
-
-  app.use(cors());
+  app.use(cors({ origin: '*' }));
   app.use(morgan('dev'));
   app.use(fileUpload({ useTempFiles: true }));
   app.use(express.json());
@@ -50,8 +49,7 @@ async function Server (typeDefs: DocumentNode[], resolvers: any) {
         return { res, decodedToken };
       }
     }));
-
-  httpServer.listen(PORT, () => console.log(`Server ready at http://localhost:${PORT}/graphql`));
+  httpServer.listen(PORT ,() => console.log(`Server ready at http://localhost:${PORT}/graphql`));
 }
 
 export default Server;
